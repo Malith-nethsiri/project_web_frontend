@@ -1,0 +1,27 @@
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: 'ValuerPro - AI-Powered Valuation Reports',
+  description: 'Professional valuation report generation platform for certified valuers',
+  keywords: ['valuation', 'property', 'AI', 'OCR', 'reports'],
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100">
+          {children}
+        </div>
+      </body>
+    </html>
+  )
+}
