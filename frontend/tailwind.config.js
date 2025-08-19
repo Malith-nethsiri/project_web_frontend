@@ -43,5 +43,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [], // NO @tailwindcss/forms - fixes Vercel build
 }
