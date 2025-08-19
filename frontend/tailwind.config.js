@@ -43,5 +43,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [], // Fixed: removed @tailwindcss/forms
 }
