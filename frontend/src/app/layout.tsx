@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: 'ValuerPro - AI-Powered Valuation Reports',
   description: 'Professional valuation report generation platform for certified valuers',
   keywords: ['valuation', 'property', 'AI', 'OCR', 'reports'],
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({
