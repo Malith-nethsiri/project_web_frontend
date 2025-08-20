@@ -25,7 +25,14 @@
       "Bash(npm install:*)",
       "Bash(npx next:*)",
       "WebFetch(domain:g.co)",
-      "WebFetch(domain:gemini.google.com)"
+      "WebFetch(domain:gemini.google.com)",
+      "WebFetch(domain:docs.railway.com)",
+      "WebSearch",
+      "Bash(timeout 10s npm start)",
+      "Bash(mv:*)",
+      "Bash(git rm:*)",
+      "Bash(railway status:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": [],

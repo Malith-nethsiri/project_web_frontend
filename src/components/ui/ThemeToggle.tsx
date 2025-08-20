@@ -1,10 +1,11 @@
 'use client'
 
-import { useTheme } from '../../contexts/ThemeContext'
+import { useTheme } from 'next-themes'
 import { useState, useEffect } from 'react'
+import { SunIcon, MoonIcon, ComputerDesktopIcon } from '@heroicons/react/24/outline'
 
 export function ThemeToggle() {
-  const { theme, effectiveTheme, toggleTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
   // Only render after hydration to prevent SSR mismatch
@@ -13,67 +14,43 @@ export function ThemeToggle() {
   }, [])
 
   if (!mounted) {
-    // Return a placeholder that matches the expected size during SSR
     return (
-      <div
-        style={{
-          background: '#f3f4f6',
-          border: '1px solid #d1d5db',
-          borderRadius: '8px',
-          padding: '8px 12px',
-          minWidth: '120px',
-          height: '36px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '14px',
-          color: '#6b7280'
-        }}
-      >
-        Loading...
-      </div>
+      <button className="btn-ghost p-2 w-10 h-10">
+        <div className="w-4 h-4 animate-pulse bg-gray-300 rounded" />
+      </button>
     )
   }
 
+  const cycleTheme = () => {
+    if (theme === 'light') {
+      setTheme('dark')
+    } else if (theme === 'dark') {
+      setTheme('system')
+    } else {
+      setTheme('light')
+    }
+  }
+
   const getIcon = () => {
-    if (theme === 'light') return '☀️'
-    if (theme === 'dark') return '🌙'
-    return '💻' // system
+    if (theme === 'light') return <SunIcon className="h-4 w-4" />
+    if (theme === 'dark') return <MoonIcon className="h-4 w-4" />
+    return <ComputerDesktopIcon className="h-4 w-4" />
   }
 
   const getLabel = () => {
-    if (theme === 'light') return 'Light Mode'
-    if (theme === 'dark') return 'Dark Mode'
-    return `System (${effectiveTheme})`
+    if (theme === 'light') return 'Light mode'
+    if (theme === 'dark') return 'Dark mode'
+    return 'System theme'
   }
-
-  // Debug log (safe for SSR)
-  console.log('Theme Toggle State:', { theme, effectiveTheme })
 
   return (
     <button
-      onClick={toggleTheme}
-      className="theme-toggle"
-      aria-label={`Switch theme. Current: ${getLabel()}`}
+      onClick={cycleTheme}
+      className="btn-ghost p-2 w-10 h-10"
+      aria-label={getLabel()}
       title={getLabel()}
-      style={{
-        background: 'var(--bg-secondary)',
-        border: '1px solid var(--border-color)',
-        borderRadius: '8px',
-        padding: '8px 12px',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        fontSize: '14px',
-        color: 'var(--text-primary)',
-        transition: 'all 0.2s ease',
-        minWidth: '120px',
-        justifyContent: 'center'
-      }}
     >
-      <span style={{ fontSize: '16px' }}>{getIcon()}</span>
-      <span>{theme === 'system' ? `Auto (${effectiveTheme})` : theme}</span>
+      {getIcon()}
     </button>
   )
 }

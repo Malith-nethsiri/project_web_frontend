@@ -5,69 +5,28 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: ['class', '[data-theme="dark"]'],
+  darkMode: ['class'],
   theme: {
+    container: {
+      center: true,
+      padding: "1rem",
+      screens: {
+        "2xl": "72rem",
+      },
+    },
     extend: {
       colors: {
-        // ValuerPro Brand Colors
-        primary: {
-          DEFAULT: '#0A2540', // Deep Navy
-          50: '#f0f7ff',
-          100: '#e0efff',
-          200: '#b9dfff',
-          300: '#7cc8ff',
-          400: '#36afff',
-          500: '#0991ff',
-          600: '#0071db',
-          700: '#0059b3',
-          800: '#004d94',
-          900: '#0A2540',
-        },
-        accent: {
-          DEFAULT: '#3B82F6', // Electric Blue
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3B82F6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-        },
-        success: {
-          DEFAULT: '#10B981', // Emerald
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10B981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
-        },
-        neutral: {
-          DEFAULT: '#64748b',
-          50: '#F8FAFC', // Background
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1E293B', // Text
-          900: '#0f172a',
-        },
+        background: "rgb(var(--bg) / <alpha-value>)",
+        foreground: "rgb(var(--fg) / <alpha-value>)",
+        brand: "rgb(var(--brand) / <alpha-value>)",
         // Keep existing for compatibility
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
