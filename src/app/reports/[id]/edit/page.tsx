@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { 
@@ -35,13 +35,7 @@ export default function EditReportPage() {
   const [activeTab, setActiveTab] = useState('overview')
   const [isSaving, setIsSaving] = useState(false)
 
-  useEffect(() => {
-    if (reportId) {
-      loadReportData()
-    }
-  }, [reportId])
-
-  const loadReportData = async () => {
+  const loadReportData = useCallback(async () => {
     try {
       setIsLoading(true)
       const response = await apiClient.getReport(reportId)
@@ -52,7 +46,13 @@ export default function EditReportPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [reportId, router])
+
+  useEffect(() => {
+    if (reportId) {
+      loadReportData()
+    }
+  }, [reportId, loadReportData])
 
   const handleSave = async () => {
     setIsSaving(true)
@@ -122,24 +122,24 @@ export default function EditReportPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-secondary-200">
+      <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Link
                 href="/dashboard"
-                className="flex items-center space-x-2 text-secondary-600 hover:text-secondary-900"
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
               >
                 <ArrowLeftIcon className="h-5 w-5" />
                 <span>Dashboard</span>
               </Link>
-              <div className="border-l border-secondary-300 pl-4">
-                <h1 className="text-xl font-semibold text-secondary-900">
+              <div className="border-l border-gray-300 pl-4">
+                <h1 className="text-xl font-semibold text-gray-900">
                   {reportData.report.title}
                 </h1>
-                <p className="text-sm text-secondary-600">
+                <p className="text-sm text-gray-600">
                   Ref: {reportData.report.reference_number}
                 </p>
               </div>
@@ -200,8 +200,8 @@ export default function EditReportPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab.id
-                      ? 'border-primary-500 text-primary-600'
-                      : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -224,20 +224,20 @@ export default function EditReportPage() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium text-secondary-700">Title</label>
-                      <p className="mt-1 text-secondary-900">{reportData.report.title}</p>
+                      <label className="text-sm font-medium text-gray-700">Title</label>
+                      <p className="mt-1 text-gray-900">{reportData.report.title}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-secondary-700">Purpose</label>
-                      <p className="mt-1 text-secondary-900 capitalize">{reportData.report.purpose}</p>
+                      <label className="text-sm font-medium text-gray-700">Purpose</label>
+                      <p className="mt-1 text-gray-900 capitalize">{reportData.report.purpose}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-secondary-700">Bank Name</label>
-                      <p className="mt-1 text-secondary-900">{reportData.report.bank_name || 'Not specified'}</p>
+                      <label className="text-sm font-medium text-gray-700">Bank Name</label>
+                      <p className="mt-1 text-gray-900">{reportData.report.bank_name || 'Not specified'}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-secondary-700">Bank Reference</label>
-                      <p className="mt-1 text-secondary-900">{reportData.report.bank_reference || 'Not specified'}</p>
+                      <label className="text-sm font-medium text-gray-700">Bank Reference</label>
+                      <p className="mt-1 text-gray-900">{reportData.report.bank_reference || 'Not specified'}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -251,15 +251,15 @@ export default function EditReportPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-secondary-600">Documents</span>
+                      <span className="text-sm text-gray-600">Documents</span>
                       <span className="text-sm font-medium">0/3</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-secondary-600">Property Details</span>
+                      <span className="text-sm text-gray-600">Property Details</span>
                       <span className="text-sm font-medium">{reportData.property ? '✓' : '○'}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-secondary-600">Valuation</span>
+                      <span className="text-sm text-gray-600">Valuation</span>
                       <span className="text-sm font-medium">{reportData.valuation ? '✓' : '○'}</span>
                     </div>
                   </div>
@@ -272,17 +272,17 @@ export default function EditReportPage() {
             <Card>
               <CardHeader>
                 <h3 className="text-lg font-semibold">Document Upload & Processing</h3>
-                <p className="text-secondary-600">Upload survey plans, deeds, and other documents for AI processing</p>
+                <p className="text-gray-600">Upload survey plans, deeds, and other documents for AI processing</p>
               </CardHeader>
               <CardContent>
-                <div className="border-2 border-dashed border-secondary-300 rounded-lg p-8 text-center">
-                  <CloudArrowUpIcon className="h-12 w-12 text-secondary-400 mx-auto mb-4" />
-                  <h4 className="text-lg font-medium text-secondary-900 mb-2">Upload Documents</h4>
-                  <p className="text-secondary-600 mb-4">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <CloudArrowUpIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">Upload Documents</h4>
+                  <p className="text-gray-600 mb-4">
                     Drag and drop files here, or click to select
                   </p>
                   <Button>Choose Files</Button>
-                  <p className="text-xs text-secondary-500 mt-2">
+                  <p className="text-xs text-gray-500 mt-2">
                     Supported formats: JPG, PNG, PDF • Max file size: 10MB
                   </p>
                 </div>
@@ -299,28 +299,28 @@ export default function EditReportPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-secondary-700 mb-1">Lot Number</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Lot Number</label>
                       <input
                         type="text"
-                        className="form-input w-full"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Enter lot number"
                         value={reportData.property?.lot_number || ''}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-secondary-700 mb-1">Plan Number</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Plan Number</label>
                       <input
                         type="text"
-                        className="form-input w-full"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Enter plan number"
                         value={reportData.property?.plan_number || ''}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-secondary-700 mb-1">Total Extent</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Total Extent</label>
                       <input
                         type="text"
-                        className="form-input w-full"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="e.g., 2A-1R-15.5P"
                         value={reportData.property?.total_extent || ''}
                       />
@@ -336,16 +336,16 @@ export default function EditReportPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-secondary-700 mb-1">Address</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
                       <textarea
-                        className="form-input w-full"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         rows={3}
                         placeholder="Enter property address"
                         value={reportData.property?.address || ''}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-secondary-700 mb-1">Land Shape</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Land Shape</label>
                       <select className="form-input w-full">
                         <option value="">Select shape</option>
                         <option value="regular">Regular</option>
@@ -363,27 +363,27 @@ export default function EditReportPage() {
             <Card>
               <CardHeader>
                 <h3 className="text-lg font-semibold">Location & Access</h3>
-                <p className="text-secondary-600">Add coordinates and generate access directions</p>
+                <p className="text-gray-600">Add coordinates and generate access directions</p>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-secondary-700 mb-1">Latitude</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
                       <input
                         type="number"
                         step="any"
-                        className="form-input w-full"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="7.8731"
                         value={reportData.property?.latitude || ''}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-secondary-700 mb-1">Longitude</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
                       <input
                         type="number"
                         step="any"
-                        className="form-input w-full"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="80.7718"
                         value={reportData.property?.longitude || ''}
                       />
@@ -393,8 +393,8 @@ export default function EditReportPage() {
                       Generate Map & Directions
                     </Button>
                   </div>
-                  <div className="bg-secondary-100 rounded-lg p-4 flex items-center justify-center">
-                    <div className="text-center text-secondary-600">
+                  <div className="bg-gray-100 rounded-lg p-4 flex items-center justify-center">
+                    <div className="text-center text-gray-600">
                       <MapIcon className="h-12 w-12 mx-auto mb-2" />
                       <p>Map will appear here</p>
                     </div>
@@ -408,13 +408,13 @@ export default function EditReportPage() {
             <Card>
               <CardHeader>
                 <h3 className="text-lg font-semibold">Valuation Summary</h3>
-                <p className="text-secondary-600">Enter valuation details and calculations</p>
+                <p className="text-gray-600">Enter valuation details and calculations</p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   {/* Valuation Method */}
                   <div>
-                    <label className="block text-sm font-medium text-secondary-700 mb-2">Valuation Method</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Valuation Method</label>
                     <select className="form-input w-full">
                       <option value="market">Market Approach</option>
                       <option value="cost">Cost Approach</option>
@@ -423,17 +423,17 @@ export default function EditReportPage() {
                   </div>
 
                   {/* Valuation Table */}
-                  <div className="border border-secondary-300 rounded-lg overflow-hidden">
+                  <div className="border border-gray-300 rounded-lg overflow-hidden">
                     <table className="w-full">
-                      <thead className="bg-secondary-50">
+                      <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-secondary-900">Component</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-secondary-900">Extent/Area</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-secondary-900">Rate</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-secondary-900">Value</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Component</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Extent/Area</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Rate</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Value</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-secondary-200">
+                      <tbody className="divide-y divide-gray-200">
                         <tr>
                           <td className="px-4 py-3">Land</td>
                           <td className="px-4 py-3">
@@ -458,7 +458,7 @@ export default function EditReportPage() {
                             <input type="number" className="form-input" placeholder="LKR" />
                           </td>
                         </tr>
-                        <tr className="bg-secondary-50">
+                        <tr className="bg-gray-50">
                           <td className="px-4 py-3 font-semibold">Total Market Value</td>
                           <td className="px-4 py-3"></td>
                           <td className="px-4 py-3"></td>

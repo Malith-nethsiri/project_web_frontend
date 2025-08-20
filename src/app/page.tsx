@@ -205,8 +205,8 @@ export default function Home() {
           <h2 className="text-5xl font-extrabold text-center text-blue-800 dark:text-blue-400 mb-16">What Our Clients Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-600 flex flex-col h-full">
-              <div className="text-cyan-400 text-3xl mb-4">"</div>
-              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">"ValuerPro's OCR technology extracted data from our complex property documents perfectly. The GPT-4o analysis provided insights we never imagined possible."</p>
+              <div className="text-cyan-400 text-3xl mb-4">&ldquo;</div>
+              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">&ldquo;ValuerPro&apos;s OCR technology extracted data from our complex property documents perfectly. The GPT-4o analysis provided insights we never imagined possible.&rdquo;</p>
               <div className="flex items-center">
                 <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xl mr-4">JD</div>
                 <div>
@@ -217,8 +217,8 @@ export default function Home() {
             </div>
 
             <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-600 flex flex-col h-full">
-              <div className="text-cyan-400 text-3xl mb-4">"</div>
-              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">"The Google Maps integration is incredible. Property locations are pinpointed accurately, and the visual power enhances our geographical analysis significantly."</p>
+              <div className="text-cyan-400 text-3xl mb-4">&ldquo;</div>
+              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">&ldquo;The Google Maps integration is incredible. Property locations are pinpointed accurately, and the visual power enhances our geographical analysis significantly.&rdquo;</p>
               <div className="flex items-center">
                 <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl mr-4">MS</div>
                 <div>
@@ -229,8 +229,8 @@ export default function Home() {
             </div>
 
             <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-600 flex flex-col h-full">
-              <div className="text-cyan-400 text-3xl mb-4">"</div>
-              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">"Thanks to ValuerPro's AI and secure AWS storage, we're making smarter decisions faster than ever. It's truly an intelligent partner for our data needs."</p>
+              <div className="text-cyan-400 text-3xl mb-4">&ldquo;</div>
+              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">&ldquo;Thanks to ValuerPro&apos;s AI and secure AWS storage, we&apos;re making smarter decisions faster than ever. It&apos;s truly an intelligent partner for our data needs.&rdquo;</p>
               <div className="flex items-center">
                 <div className="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold text-xl mr-4">AR</div>
                 <div>

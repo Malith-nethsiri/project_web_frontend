@@ -48,7 +48,7 @@ export default function TestPage() {
           }}
         />
         <p style={{ color: 'green', fontSize: '16px' }}>
-          Current value: "{value}"
+          Current value: &ldquo;{value}&rdquo;
         </p>
       </div>
 

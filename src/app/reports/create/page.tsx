@@ -58,20 +58,20 @@ export default function CreateReportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-secondary-200">
+      <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16">
             <Link
               href="/dashboard"
-              className="flex items-center space-x-2 text-secondary-600 hover:text-secondary-900"
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
             >
               <ArrowLeftIcon className="h-5 w-5" />
               <span>Back to Dashboard</span>
             </Link>
             <div className="ml-6">
-              <h1 className="text-xl font-semibold text-secondary-900">Create New Report</h1>
+              <h1 className="text-xl font-semibold text-gray-900">Create New Report</h1>
             </div>
           </div>
         </div>
@@ -81,10 +81,10 @@ export default function CreateReportPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center space-x-3">
-              <DocumentTextIcon className="h-8 w-8 text-primary-600" />
+              <DocumentTextIcon className="h-8 w-8 text-blue-600" />
               <div>
-                <h2 className="text-xl font-semibold text-secondary-900">Report Details</h2>
-                <p className="text-secondary-600">Provide basic information about the valuation report.</p>
+                <h2 className="text-xl font-semibold text-gray-900">Report Details</h2>
+                <p className="text-gray-600">Provide basic information about the valuation report.</p>
               </div>
             </div>
           </CardHeader>
@@ -107,13 +107,13 @@ export default function CreateReportPage() {
               />
 
               <div>
-                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Purpose of Valuation *
                 </label>
                 <select
                   value={formData.purpose}
                   onChange={(e) => handleInputChange('purpose', e.target.value)}
-                  className="form-input w-full px-3 py-2 border border-secondary-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   required
                 >
                   <option value="mortgage">Mortgage</option>
@@ -179,22 +179,22 @@ export default function CreateReportPage() {
         {/* Next Steps Info */}
         <Card className="mt-6">
           <CardContent>
-            <h3 className="text-lg font-medium text-secondary-900 mb-3">What happens next?</h3>
-            <div className="space-y-2 text-secondary-600">
+            <h3 className="text-lg font-medium text-gray-900 mb-3">What happens next?</h3>
+            <div className="space-y-2 text-gray-600">
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
-                <span>You'll be taken to the report editor</span>
+                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                <span>You&apos;ll be taken to the report editor</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                 <span>Upload and process documents with OCR</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                 <span>Add property details, photos, and valuations</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                 <span>Generate professional DOCX and PDF reports</span>
               </div>
             </div>

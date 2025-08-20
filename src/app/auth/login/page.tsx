@@ -42,13 +42,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold text-blue-800">
             ValuerPro
           </h1>
-          <p className="text-secondary-600 mt-2">Sign in to your account</p>
+          <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
         <Card>
@@ -93,11 +93,11 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-secondary-600">
-                Don't have an account?{' '}
+              <p className="text-gray-600">
+                Don&apos;t have an account?{' '}
                 <Link
                   href="/auth/register"
-                  className="text-primary-600 hover:text-primary-700 font-medium"
+                  className="text-blue-600 hover:text-blue-700 font-medium"
                 >
                   Sign up
                 </Link>
