@@ -22,6 +22,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           name={inputId}
+          style={{
+            width: '100%',
+            padding: '12px',
+            border: '3px solid blue',
+            borderRadius: '8px',
+            fontSize: '18px',
+            color: 'black',
+            backgroundColor: 'yellow',
+            fontWeight: 'bold'
+          }}
           className={clsx(
             'form-input w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-offset-0 transition-colors',
             {

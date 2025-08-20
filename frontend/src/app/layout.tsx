@@ -20,8 +20,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100">
+      <body className={inter.className} style={{ background: 'red', color: 'white' }}>
+        <div style={{ minHeight: '100vh', background: 'linear-gradient(45deg, blue, green)' }}>
           {children}
         </div>
       </body>
