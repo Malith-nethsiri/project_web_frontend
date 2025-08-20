@@ -35,6 +35,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     
     // Apply theme to document immediately to prevent FOUC
     document.documentElement.setAttribute('data-theme', initialEffective)
+    document.body.setAttribute('data-theme', initialEffective)
+    console.log('Initial theme applied:', initialEffective)
     
     setMounted(true)
   }, [])
@@ -69,6 +71,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     setEffectiveTheme(newEffective)
     document.documentElement.setAttribute('data-theme', newEffective)
+    document.body.setAttribute('data-theme', newEffective)
+    console.log('Theme changed to:', newEffective)
   }, [theme, mounted])
 
   const setTheme = (newTheme: Theme) => {
