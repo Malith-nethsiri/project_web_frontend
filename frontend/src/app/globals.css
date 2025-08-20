@@ -1,8 +1,21 @@
-/* ChatGPT Safe Defaults Fix Pack for Invisible Text */
+/* NUCLEAR OVERRIDE - FORCE TEXT VISIBILITY */
 
-/* Global reset that might be needed */
+/* Kill everything that could hide text */
 * {
   box-sizing: border-box;
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Force all text to be visible */
+html, body, div, span, p, h1, h2, h3, h4, h5, h6, input, textarea, label {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Safe defaults for text fields - ChatGPT recommended */
