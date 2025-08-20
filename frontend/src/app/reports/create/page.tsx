@@ -166,7 +166,7 @@ export default function CreateReportPage() {
                 </Button>
                 <Button
                   type="submit"
-                  isLoading={isLoading}
+                  loading={isLoading}
                   disabled={!formData.title}
                 >
                   Create Report

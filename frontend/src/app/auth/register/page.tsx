@@ -130,7 +130,7 @@ export default function RegisterPage() {
               <Button
                 type="submit"
                 className="w-full"
-                isLoading={isLoading}
+                loading={isLoading}
                 disabled={!formData.email || !formData.password || !formData.confirmPassword}
               >
                 Create Account

@@ -85,7 +85,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 className="w-full"
-                isLoading={isLoading}
+                loading={isLoading}
                 disabled={!formData.email || !formData.password}
               >
                 Sign In

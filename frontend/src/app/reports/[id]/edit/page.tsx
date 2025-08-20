@@ -149,7 +149,7 @@ export default function EditReportPage() {
               <Button
                 variant="outline"
                 onClick={handleSave}
-                isLoading={isSaving}
+                loading={isSaving}
                 size="sm"
               >
                 {isSaving ? 'Saving...' : 'Save'}
