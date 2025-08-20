@@ -1,13 +1,28 @@
-/* NUCLEAR OVERRIDE - FORCE TEXT VISIBILITY */
+/* PRODUCTION CSS - Prevent browser account issues */
 
-/* Kill everything that could hide text */
+/* Basic reset */
 * {
   box-sizing: border-box;
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
-  text-shadow: none !important;
+}
+
+/* Prevent extension overrides */
+input, textarea, select {
+  color: #333 !important;
+  background-color: #fff !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  -webkit-text-fill-color: #333 !important;
+  -webkit-appearance: none !important;
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+/* Prevent dark mode extension conflicts */
+@media (prefers-color-scheme: dark) {
+  input, textarea, select {
+    color: #333 !important;
+    background-color: #fff !important;
+    -webkit-text-fill-color: #333 !important;
+  }
 }
 
 /* Force all text to be visible */
