@@ -65,7 +65,8 @@ export default function LoginPage() {
                 label="Email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                error={errors.email}
+                error={!!errors.email}
+                helperText={errors.email}
                 required
                 autoComplete="email"
               />
@@ -75,7 +76,8 @@ export default function LoginPage() {
                 label="Password"
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                error={errors.password}
+                error={!!errors.password}
+                helperText={errors.password}
                 required
                 autoComplete="current-password"
               />

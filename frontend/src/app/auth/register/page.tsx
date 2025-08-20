@@ -99,7 +99,8 @@ export default function RegisterPage() {
                 label="Email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                error={errors.email}
+                error={!!errors.email}
+                helperText={errors.email}
                 required
                 autoComplete="email"
               />
@@ -109,10 +110,10 @@ export default function RegisterPage() {
                 label="Password"
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                error={errors.password}
+                error={!!errors.password}
+                helperText={errors.password || "Minimum 6 characters"}
                 required
                 autoComplete="new-password"
-                helperText="Minimum 6 characters"
               />
 
               <Input
@@ -120,7 +121,8 @@ export default function RegisterPage() {
                 label="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                error={errors.confirmPassword}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword}
                 required
                 autoComplete="new-password"
               />

@@ -100,7 +100,8 @@ export default function CreateReportPage() {
                 label="Report Title *"
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                error={errors.title}
+                error={!!errors.title}
+                helperText={errors.title}
                 placeholder="e.g., Property Valuation - 123 Main Street"
                 required
               />
