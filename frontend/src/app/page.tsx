@@ -150,6 +150,10 @@ export default function Home() {
             <p className="text-secondary-500 text-sm">
               © 2024 ValuerPro. All rights reserved.
             </p>
+            <p className="text-secondary-400 text-xs mt-2">
+              Build: {process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 7) || 'local'} | 
+              Time: {new Date().toISOString()}
+            </p>
           </div>
         </div>
       </footer>
