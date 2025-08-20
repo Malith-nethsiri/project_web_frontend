@@ -1,281 +1,528 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRightIcon, CheckIcon, DocumentTextIcon, CameraIcon, MapIcon, ClockIcon, StarIcon, CloudArrowUpIcon, CpuChipIcon, MapPinIcon, DocumentIcon } from '@heroicons/react/24/outline'
+import { motion } from 'framer-motion'
+import { 
+  ArrowRightIcon, 
+  CheckIcon, 
+  DocumentTextIcon, 
+  CameraIcon, 
+  MapIcon, 
+  ClockIcon, 
+  StarIcon, 
+  CloudArrowUpIcon, 
+  CpuChipIcon, 
+  MapPinIcon, 
+  DocumentIcon,
+  PlayIcon,
+  ShieldCheckIcon,
+  BoltIcon,
+  ChartBarIcon,
+  GlobeAltIcon
+} from '@heroicons/react/24/outline'
 import { ThemeToggle } from '../components/ui/ThemeToggle'
-import { Button } from '../components/ui/Button'
-import { Card, CardContent } from '../components/ui/Card'
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 60 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease: "easeOut" }
+}
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const features = [
+  {
+    icon: DocumentTextIcon,
+    title: "Advanced OCR Technology",
+    description: "Extract text and data from any property document with 99.9% accuracy using state-of-the-art AI vision models.",
+    gradient: "from-blue-500 to-cyan-500"
+  },
+  {
+    icon: BoltIcon,
+    title: "Lightning Fast Processing",
+    description: "Generate comprehensive reports in under 60 seconds. From upload to final PDF - faster than any manual process.",
+    gradient: "from-purple-500 to-pink-500"
+  },
+  {
+    icon: MapPinIcon,
+    title: "Smart Location Intelligence",
+    description: "Automatic GPS coordinates, satellite imagery, and location-based analytics powered by Google Maps API.",
+    gradient: "from-green-500 to-emerald-500"
+  },
+  {
+    icon: CpuChipIcon,
+    title: "GPT-4o AI Processing",
+    description: "Advanced language models analyze property documents and generate intelligent insights automatically.",
+    gradient: "from-orange-500 to-red-500"
+  },
+  {
+    icon: ShieldCheckIcon,
+    title: "Enterprise Security",
+    description: "Bank-grade encryption with AWS S3 storage. Your sensitive property data is always protected.",
+    gradient: "from-indigo-500 to-blue-500"
+  },
+  {
+    icon: ChartBarIcon,
+    title: "Professional Reports",
+    description: "Generate DOCX and PDF reports that meet industry standards with customizable templates.",
+    gradient: "from-teal-500 to-green-500"
+  }
+]
+
+const steps = [
+  {
+    number: "01",
+    title: "Upload Documents",
+    description: "Drag and drop your property documents - survey plans, deeds, or photos. Supports all major formats.",
+    icon: CloudArrowUpIcon
+  },
+  {
+    number: "02", 
+    title: "AI Processing",
+    description: "Our GPT-4o engine extracts key information while OCR technology digitizes all text content.",
+    icon: CpuChipIcon
+  },
+  {
+    number: "03",
+    title: "Smart Analysis",
+    description: "Location data is automatically geocoded and property details are intelligently categorized.",
+    icon: MapIcon
+  },
+  {
+    number: "04",
+    title: "Professional Output",
+    description: "Download your complete valuation report in DOCX or PDF format, ready for clients.",
+    icon: DocumentIcon
+  }
+]
+
+const testimonials = [
+  {
+    name: "Sarah Chen",
+    role: "Senior Property Valuer",
+    company: "PropertyFirst Ltd",
+    avatar: "SC",
+    rating: 5,
+    quote: "ValuerPro has transformed our workflow completely. What used to take 3-4 hours now takes 30 minutes. The OCR accuracy is incredible.",
+    gradient: "from-blue-500 to-purple-500"
+  },
+  {
+    name: "Michael Rodriguez",
+    role: "Lead Surveyor", 
+    company: "Urban Valuations",
+    avatar: "MR",
+    rating: 5,
+    quote: "The Google Maps integration is a game-changer. Property locations are pinpointed perfectly, and the satellite imagery adds real value.",
+    gradient: "from-green-500 to-teal-500"
+  },
+  {
+    name: "David Kim",
+    role: "Principal Valuer",
+    company: "Metro Property Group",
+    avatar: "DK", 
+    rating: 5,
+    quote: "The AI analysis catches details we might miss. It's like having a senior valuer reviewing every report before it goes out.",
+    gradient: "from-purple-500 to-pink-500"
+  }
+]
+
+const stats = [
+  { number: "10,000+", label: "Reports Generated" },
+  { number: "99.9%", label: "OCR Accuracy" },
+  { number: "60s", label: "Average Processing Time" },
+  { number: "500+", label: "Happy Valuers" }
+]
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200">
-      {/* Header */}
-      <header className="bg-white dark:bg-slate-800 shadow-lg py-4 px-6 md:px-12 flex justify-between items-center rounded-b-xl sticky top-0 z-50 border-b border-gray-100 dark:border-slate-700">
-        <div className="flex items-center">
-          <Image 
-            src="/images/logo.png" 
-            alt="ValuerPro Logo" 
-            width={48}
-            height={48}
-            className="h-12 w-auto mr-4 rounded-lg shadow-sm" 
-          />
-          <span className="text-3xl font-extrabold text-blue-800 dark:text-blue-400 tracking-tight">ValuerPro</span>
-        </div>
-        <nav className="hidden md:flex space-x-10">
-          <a href="#features" className="text-gray-700 dark:text-gray-300 hover:text-cyan-600 font-semibold transition duration-300 text-lg">Features</a>
-          <a href="#why-choose-us" className="text-gray-700 dark:text-gray-300 hover:text-cyan-600 font-semibold transition duration-300 text-lg">Why Choose Us</a>
-          <a href="#how-it-works" className="text-gray-700 dark:text-gray-300 hover:text-cyan-600 font-semibold transition duration-300 text-lg">How It Works</a>
-          <a href="#testimonials" className="text-gray-700 dark:text-gray-300 hover:text-cyan-600 font-semibold transition duration-300 text-lg">Testimonials</a>
-        </nav>
-        <div className="flex items-center space-x-4">
-          <ThemeToggle />
-          <Link
-            href="/auth/login"
-            className="text-gray-700 dark:text-gray-300 hover:text-cyan-600 font-semibold transition duration-300"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/auth/register"
-            className="bg-cyan-600 text-white font-bold px-6 py-2 rounded-full hover:bg-cyan-700 transition duration-300 shadow-lg"
-          >
-            Get Started
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-neutral-50">
+      {/* Premium Navigation */}
+      <motion.header 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-neutral-200"
+      >
+        <div className="container-custom">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-lg">VP</span>
+              </div>
+              <span className="text-2xl font-bold text-neutral-800">ValuerPro</span>
+            </div>
 
-      <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-24 px-6 md:px-16 flex flex-col items-center justify-center text-center rounded-xl mx-4 mt-8 shadow-2xl overflow-hidden">
-          <div className="relative z-10 max-w-5xl">
-            <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 animate-fade-in-down">
-              Unlock Efficiency with <span className="text-cyan-300 drop-shadow-lg">AI-Powered Reports</span>
-            </h1>
-            <p className="text-lg md:text-2xl mb-10 opacity-90 animate-fade-in-up">
-              Transform property documents into professional reports using advanced OCR, GPT-4o AI processing, Google Maps integration, and secure AWS cloud storage.
-            </p>
-            <Link 
-              href="/auth/register" 
-              className="inline-block bg-cyan-600 text-white font-extrabold py-4 px-10 rounded-full shadow-xl hover:bg-cyan-700 transform hover:scale-105 transition-all duration-300 ease-in-out text-xl"
+            {/* Navigation */}
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-neutral-600 hover:text-primary font-medium transition-colors">Features</a>
+              <a href="#how-it-works" className="text-neutral-600 hover:text-primary font-medium transition-colors">How it Works</a>
+              <a href="#testimonials" className="text-neutral-600 hover:text-primary font-medium transition-colors">Reviews</a>
+              <a href="#pricing" className="text-neutral-600 hover:text-primary font-medium transition-colors">Pricing</a>
+            </nav>
+
+            {/* Actions */}
+            <div className="flex items-center space-x-4">
+              <ThemeToggle />
+              <Link href="/auth/login" className="text-neutral-600 hover:text-primary font-medium transition-colors">
+                Sign In
+              </Link>
+              <Link href="/auth/register" className="btn-primary">
+                Get Started
+                <ArrowRightIcon className="ml-2 h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </motion.header>
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-hero opacity-5"></div>
+        <div className="container-custom relative">
+          <motion.div 
+            className="text-center max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.h1 
+              className="heading-xl mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
             >
-              Create Your First Report <ArrowRightIcon className="inline ml-2 h-5 w-5" />
-            </Link>
-          </div>
-        </section>
+              Property Valuations Made{' '}
+              <span className="text-gradient">Intelligent</span>
+            </motion.h1>
+            
+            <motion.p 
+              className="text-large mb-8 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Transform property documents into professional valuation reports in seconds. 
+              Advanced OCR, GPT-4o AI, and Google Maps integration - all in one platform.
+            </motion.p>
 
-        {/* Features Section */}
-        <section id="features" className="py-20 px-6 md:px-16 bg-white dark:bg-slate-800 rounded-xl mx-4 mt-12 shadow-2xl">
-          <h2 className="text-5xl font-extrabold text-center text-blue-800 dark:text-blue-400 mb-16">How ValuerPro Transforms Your Workflow</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <div className="bg-gray-50 dark:bg-slate-700 p-8 rounded-2xl shadow-xl text-center flex flex-col items-center border border-gray-200 dark:border-slate-600 hover:transform hover:-translate-y-2 transition-all duration-300">
-              <Image 
-                src="/images/ocr.png" 
-                alt="Advanced OCR" 
-                width={160} 
-                height={160}
-                className="h-40 w-auto mb-6 object-contain rounded-xl shadow-md border-2 border-white dark:border-slate-600"
-              />
-              <h3 className="text-2xl font-bold text-blue-700 dark:text-blue-400 mb-4">Advanced OCR</h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Extract text and data from any property document with state-of-the-art optical character recognition technology.</p>
-            </div>
+            <motion.div 
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <Link href="/auth/register" className="btn-primary text-lg px-8 py-4">
+                Start Free Trial
+                <ArrowRightIcon className="ml-2 h-5 w-5" />
+              </Link>
+              <button className="btn-secondary text-lg px-8 py-4 group">
+                <PlayIcon className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                Watch Demo
+              </button>
+            </motion.div>
 
-            <div className="bg-gray-50 dark:bg-slate-700 p-8 rounded-2xl shadow-xl text-center flex flex-col items-center border border-gray-200 dark:border-slate-600 hover:transform hover:-translate-y-2 transition-all duration-300">
-              <Image 
-                src="/images/time.png" 
-                alt="Time Savings" 
-                width={160} 
-                height={160}
-                className="h-40 w-auto mb-6 object-contain rounded-xl shadow-md border-2 border-white dark:border-slate-600"
-              />
-              <h3 className="text-2xl font-bold text-blue-700 dark:text-blue-400 mb-4">Lightning Fast</h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Generate comprehensive reports in minutes instead of hours, maximizing your productivity and efficiency.</p>
-            </div>
-
-            <div className="bg-gray-50 dark:bg-slate-700 p-8 rounded-2xl shadow-xl text-center flex flex-col items-center border border-gray-200 dark:border-slate-600 hover:transform hover:-translate-y-2 transition-all duration-300">
-              <Image 
-                src="/images/map using.png" 
-                alt="Google Maps Integration" 
-                width={160} 
-                height={160}
-                className="h-40 w-auto mb-6 object-contain rounded-xl shadow-md border-2 border-white dark:border-slate-600"
-              />
-              <h3 className="text-2xl font-bold text-blue-700 dark:text-blue-400 mb-4">Maps Integration</h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Visualize property locations with interactive Google Maps, satellite views, and location-based analytics.</p>
-            </div>
-
-            <div className="bg-gray-50 dark:bg-slate-700 p-8 rounded-2xl shadow-xl text-center flex flex-col items-center border border-gray-200 dark:border-slate-600 hover:transform hover:-translate-y-2 transition-all duration-300">
-              <Image 
-                src="/images/ai tech.png" 
-                alt="GPT-4o AI Processing" 
-                width={160} 
-                height={160}
-                className="h-40 w-auto mb-6 object-contain rounded-xl shadow-md border-2 border-white dark:border-slate-600"
-              />
-              <h3 className="text-2xl font-bold text-blue-700 dark:text-blue-400 mb-4">AI-Powered Analytics</h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Leverage GPT-4o artificial intelligence for deep document analysis and intelligent report generation.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Why Choose Us */}
-        <section id="why-choose-us" className="py-20 px-6 md:px-16 bg-gray-100 dark:bg-slate-700 rounded-xl mx-4 mt-12 shadow-2xl">
-          <h2 className="text-5xl font-extrabold text-center text-blue-800 dark:text-blue-400 mb-16">Why ValuerPro Stands Out</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            <div className="flex items-start space-x-6">
-              <div className="flex-shrink-0 bg-blue-600 p-5 rounded-full shadow-lg">
-                <CpuChipIcon className="text-white h-8 w-8" />
-              </div>
-              <div>
-                <h3 className="text-3xl font-bold text-blue-700 dark:text-blue-400 mb-3">Seamless Automation</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Our GPT-4o platform automates complex data extraction and reporting, turning hours of manual work into mere minutes.</p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-6">
-              <div className="flex-shrink-0 bg-green-600 p-5 rounded-full shadow-lg">
-                <MapPinIcon className="text-white h-8 w-8" />
-              </div>
-              <div>
-                <h3 className="text-3xl font-bold text-blue-700 dark:text-blue-400 mb-3">Geographic Insights</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Google Maps integration provides location context and geographic analysis for comprehensive property evaluation.</p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-6">
-              <div className="flex-shrink-0 bg-purple-600 p-5 rounded-full shadow-lg">
-                <CloudArrowUpIcon className="text-white h-8 w-8" />
-              </div>
-              <div>
-                <h3 className="text-3xl font-bold text-blue-700 dark:text-blue-400 mb-3">Enterprise Security</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">AWS S3 cloud storage with enterprise-grade encryption ensures your sensitive documents are always secure.</p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-6">
-              <div className="flex-shrink-0 bg-cyan-600 p-5 rounded-full shadow-lg">
-                <DocumentIcon className="text-white h-8 w-8" />
-              </div>
-              <div>
-                <h3 className="text-3xl font-bold text-blue-700 dark:text-blue-400 mb-3">Professional Results</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Generate accurate, professional reports that meet industry standards with PostgreSQL data reliability.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works */}
-        <section id="how-it-works" className="py-20 px-6 md:px-16 bg-white dark:bg-slate-800 rounded-xl mx-4 mt-12 shadow-2xl">
-          <h2 className="text-5xl font-extrabold text-center text-blue-800 dark:text-blue-400 mb-16">How It Works</h2>
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto">
-                <CloudArrowUpIcon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-              </div>
-              <h3 className="text-xl font-semibold">Upload Documents</h3>
-              <p className="text-gray-600 dark:text-gray-400">Securely upload property documents to AWS S3 cloud storage</p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto">
-                <CpuChipIcon className="h-8 w-8 text-purple-600 dark:text-purple-400" />
-              </div>
-              <h3 className="text-xl font-semibold">AI Processing</h3>
-              <p className="text-gray-600 dark:text-gray-400">GPT-4o analyzes documents using advanced OCR technology</p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
-                <MapPinIcon className="h-8 w-8 text-green-600 dark:text-green-400" />
-              </div>
-              <h3 className="text-xl font-semibold">Map Integration</h3>
-              <p className="text-gray-600 dark:text-gray-400">Google Maps identifies locations and adds geographic context</p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-cyan-100 dark:bg-cyan-900/30 rounded-full flex items-center justify-center mx-auto">
-                <DocumentIcon className="h-8 w-8 text-cyan-600 dark:text-cyan-400" />
-              </div>
-              <h3 className="text-xl font-semibold">Generate Report</h3>
-              <p className="text-gray-600 dark:text-gray-400">Professional valuation reports created instantly</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials */}
-        <section id="testimonials" className="py-20 px-6 md:px-16 bg-gray-100 dark:bg-slate-700 rounded-xl mx-4 mt-12 shadow-2xl">
-          <h2 className="text-5xl font-extrabold text-center text-blue-800 dark:text-blue-400 mb-16">What Our Clients Say</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-600 flex flex-col h-full">
-              <div className="text-cyan-400 text-3xl mb-4">&ldquo;</div>
-              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">&ldquo;ValuerPro&apos;s OCR technology extracted data from our complex property documents perfectly. The GPT-4o analysis provided insights we never imagined possible.&rdquo;</p>
-              <div className="flex items-center">
-                <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xl mr-4">JD</div>
-                <div>
-                  <p className="font-bold text-blue-800 dark:text-blue-400 text-lg">Jane Doe</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">CEO, Property Solutions Ltd</p>
+            {/* Stats */}
+            <motion.div 
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <div className="text-3xl font-bold text-primary mb-1">{stat.number}</div>
+                  <div className="text-sm text-neutral-600">{stat.label}</div>
                 </div>
-              </div>
-            </div>
+              ))}
+            </motion.div>
+          </motion.div>
 
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-600 flex flex-col h-full">
-              <div className="text-cyan-400 text-3xl mb-4">&ldquo;</div>
-              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">&ldquo;The Google Maps integration is incredible. Property locations are pinpointed accurately, and the visual power enhances our geographical analysis significantly.&rdquo;</p>
-              <div className="flex items-center">
-                <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl mr-4">MS</div>
-                <div>
-                  <p className="font-bold text-blue-800 dark:text-blue-400 text-lg">Mark Smith</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Lead Analyst, GeoSolutions</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-600 flex flex-col h-full">
-              <div className="text-cyan-400 text-3xl mb-4">&ldquo;</div>
-              <p className="text-gray-700 dark:text-gray-300 italic mb-6 flex-grow">&ldquo;Thanks to ValuerPro&apos;s AI and secure AWS storage, we&apos;re making smarter decisions faster than ever. It&apos;s truly an intelligent partner for our data needs.&rdquo;</p>
-              <div className="flex items-center">
-                <div className="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold text-xl mr-4">AR</div>
-                <div>
-                  <p className="font-bold text-blue-800 dark:text-blue-400 text-lg">Anna Roberts</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Operations Director, DataFlow Inc.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 px-6 md:px-16 bg-gradient-to-r from-blue-700 to-blue-900 text-white text-center rounded-xl mx-4 my-12 shadow-2xl">
-          <h2 className="text-5xl font-extrabold mb-8">Ready to Transform Your Reports?</h2>
-          <p className="text-2xl mb-12 opacity-90">Experience the power of GPT-4o AI, Google Maps integration, and enterprise-grade AWS security.</p>
-          <Link 
-            href="/auth/register"
-            className="inline-block bg-cyan-600 text-white font-extrabold py-4 px-10 rounded-full shadow-xl hover:bg-cyan-700 transform hover:scale-105 transition-all duration-300 ease-in-out text-xl"
+          {/* Hero Image/Mockup */}
+          <motion.div 
+            className="mt-16 relative max-w-5xl mx-auto"
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
           >
-            Start Your AI-Powered Reports <ArrowRightIcon className="inline ml-2 h-5 w-5" />
-          </Link>
-        </section>
-      </main>
+            <div className="relative">
+              <div className="bg-white rounded-2xl shadow-large p-8 border border-neutral-200">
+                <div className="aspect-video bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-xl flex items-center justify-center">
+                  <div className="text-center">
+                    <DocumentTextIcon className="h-16 w-16 text-neutral-400 mx-auto mb-4" />
+                    <p className="text-neutral-600 font-medium">Product Demo Screenshot</p>
+                    <p className="text-sm text-neutral-500">Coming Soon</p>
+                  </div>
+                </div>
+              </div>
+              {/* Floating Elements */}
+              <motion.div 
+                className="absolute -top-4 -right-4 bg-success text-white p-3 rounded-xl shadow-lg"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <CheckIcon className="h-6 w-6" />
+              </motion.div>
+              <motion.div 
+                className="absolute -bottom-4 -left-4 bg-accent text-white p-3 rounded-xl shadow-lg"
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+              >
+                <BoltIcon className="h-6 w-6" />
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-10 px-6 md:px-12 text-center rounded-t-xl mx-4 mb-4 shadow-inner">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <Image 
-              src="/images/logo.png" 
-              alt="ValuerPro Logo" 
-              width={32}
-              height={32}
-              className="w-8 h-8 rounded"
-            />
-            <span className="text-xl font-bold">ValuerPro</span>
+      {/* Features Grid */}
+      <section id="features" className="section-padding bg-white">
+        <div className="container-custom">
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
+            <h2 className="heading-lg mb-4">Powerful Features for Modern Valuers</h2>
+            <p className="text-large max-w-2xl mx-auto">
+              Everything you need to create professional property valuation reports faster and more accurately than ever.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
+            {features.map((feature, index) => (
+              <motion.div 
+                key={index}
+                className="card-feature group"
+                variants={fadeInUp}
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.gradient} p-4 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="heading-sm mb-4 text-xl">{feature.title}</h3>
+                <p className="text-neutral-600 leading-relaxed">{feature.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section id="how-it-works" className="section-padding bg-neutral-50">
+        <div className="container-custom">
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
+            <h2 className="heading-lg mb-4">How ValuerPro Works</h2>
+            <p className="text-large max-w-2xl mx-auto">
+              From document upload to professional report - our streamlined process makes property valuation effortless.
+            </p>
+          </motion.div>
+
+          <div className="max-w-5xl mx-auto">
+            {steps.map((step, index) => (
+              <motion.div 
+                key={index}
+                className="flex flex-col lg:flex-row items-center mb-16 last:mb-0"
+                variants={fadeInUp}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                {/* Step Number */}
+                <div className="flex-shrink-0 mb-8 lg:mb-0 lg:mr-12">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-primary to-accent text-white text-2xl font-bold flex items-center justify-center shadow-large">
+                    {step.number}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 text-center lg:text-left">
+                  <div className="flex items-center justify-center lg:justify-start mb-4">
+                    <step.icon className="h-8 w-8 text-primary mr-3" />
+                    <h3 className="heading-sm text-2xl">{step.title}</h3>
+                  </div>
+                  <p className="text-body max-w-lg">{step.description}</p>
+                </div>
+
+                {/* Visual (placeholder) */}
+                <div className="flex-shrink-0 mt-8 lg:mt-0 lg:ml-12">
+                  <div className="w-64 h-40 bg-white rounded-xl shadow-card flex items-center justify-center border border-neutral-200">
+                    <step.icon className="h-12 w-12 text-neutral-400" />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-          <p className="text-md text-gray-400 mb-6">&copy; 2024 ValuerPro. All rights reserved.</p>
-          <div className="flex justify-center space-x-8 mb-6">
-            <Link href="#" className="text-gray-400 hover:text-white transition duration-300 text-lg">Privacy Policy</Link>
-            <Link href="#" className="text-gray-400 hover:text-white transition duration-300 text-lg">Terms of Service</Link>
-            <Link href="/auth/login" className="text-gray-400 hover:text-white transition duration-300 text-lg">Dashboard</Link>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="section-padding bg-white">
+        <div className="container-custom">
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
+            <h2 className="heading-lg mb-4">Trusted by Property Professionals</h2>
+            <p className="text-large max-w-2xl mx-auto">
+              See how ValuerPro is transforming workflows for valuers, surveyors, and property professionals worldwide.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="grid md:grid-cols-3 gap-8"
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
+            {testimonials.map((testimonial, index) => (
+              <motion.div 
+                key={index}
+                className="card-premium p-8"
+                variants={fadeInUp}
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {/* Stars */}
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <StarIcon key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <blockquote className="text-neutral-700 mb-6 leading-relaxed italic">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </blockquote>
+
+                {/* Author */}
+                <div className="flex items-center">
+                  <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${testimonial.gradient} flex items-center justify-center text-white font-bold mr-4`}>
+                    {testimonial.avatar}
+                  </div>
+                  <div>
+                    <div className="font-semibold text-neutral-800">{testimonial.name}</div>
+                    <div className="text-sm text-neutral-600">{testimonial.role}</div>
+                    <div className="text-sm text-neutral-500">{testimonial.company}</div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="section-padding bg-gradient-hero text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-animated opacity-10"></div>
+        <div className="container-custom relative">
+          <motion.div 
+            className="text-center max-w-3xl mx-auto"
+            variants={fadeInUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Ready to Transform Your Valuations?
+            </h2>
+            <p className="text-xl mb-8 opacity-90">
+              Join hundreds of property professionals who&apos;ve already streamlined their workflow with ValuerPro.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/auth/register" className="btn-accent text-lg px-8 py-4">
+                Start Free Trial
+                <ArrowRightIcon className="ml-2 h-5 w-5" />
+              </Link>
+              <Link href="/demo" className="btn-secondary text-lg px-8 py-4 !text-white !border-white hover:!bg-white hover:!text-primary">
+                Book Demo
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Premium Footer */}
+      <footer className="bg-neutral-900 text-neutral-300 py-16">
+        <div className="container-custom">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
+            {/* Brand */}
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">VP</span>
+                </div>
+                <span className="text-2xl font-bold text-white">ValuerPro</span>
+              </div>
+              <p className="text-neutral-400 max-w-md mb-6">
+                The most advanced AI-powered property valuation platform. Transform your workflow with intelligent automation.
+              </p>
+              <div className="flex space-x-4">
+                <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <GlobeAltIcon className="h-6 w-6" />
+                </a>
+              </div>
+            </div>
+
+            {/* Product */}
+            <div>
+              <h4 className="font-semibold text-white mb-4">Product</h4>
+              <ul className="space-y-2">
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="/demo" className="hover:text-white transition-colors">Demo</a></li>
+                <li><a href="/integrations" className="hover:text-white transition-colors">Integrations</a></li>
+              </ul>
+            </div>
+
+            {/* Company */}
+            <div>
+              <h4 className="font-semibold text-white mb-4">Company</h4>
+              <ul className="space-y-2">
+                <li><a href="/about" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="/careers" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="/support" className="hover:text-white transition-colors">Support</a></li>
+              </ul>
+            </div>
           </div>
-          <div className="text-sm text-gray-500">
-            <p>Powered by OpenAI GPT-4o • Google Maps API • AWS S3 • PostgreSQL</p>
+
+          <div className="border-t border-neutral-800 pt-8 flex flex-col md:flex-row items-center justify-between">
+            <p className="text-neutral-500 text-sm">
+              © 2024 ValuerPro. All rights reserved.
+            </p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="/privacy" className="text-neutral-500 hover:text-white text-sm transition-colors">Privacy</a>
+              <a href="/terms" className="text-neutral-500 hover:text-white text-sm transition-colors">Terms</a>
+              <a href="/security" className="text-neutral-500 hover:text-white text-sm transition-colors">Security</a>
+            </div>
           </div>
         </div>
       </footer>
