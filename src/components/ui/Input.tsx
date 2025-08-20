@@ -8,31 +8,41 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, helperText, ...props }, ref) => {
+  ({ className, label, error, helperText, id, ...props }, ref) => {
+    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
+    
     return (
-      <div className="w-full">
+      <div style={{ width: '100%' }}>
         {label && (
-          <label className="block text-sm font-medium text-secondary-700 mb-1">
+          <label 
+            htmlFor={inputId} 
+            style={{ 
+              display: 'block', 
+              fontSize: '14px', 
+              fontWeight: '500', 
+              color: 'black',
+              marginBottom: '4px' 
+            }}
+          >
             {label}
           </label>
         )}
         <input
           ref={ref}
-          className={clsx(
-            'form-input w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-offset-0 transition-colors',
-            {
-              'border-secondary-300 focus:border-primary-500 focus:ring-primary-500': !error,
-              'border-red-300 focus:border-red-500 focus:ring-red-500': error,
-            },
-            className
-          )}
+          id={inputId}
+          name={inputId}
+          style={{ width: '100%' }}
           {...props}
         />
         {error && (
-          <p className="mt-1 text-sm text-red-600">{error}</p>
+          <p style={{ marginTop: '4px', fontSize: '14px', color: 'red' }}>
+            {error}
+          </p>
         )}
         {helperText && !error && (
-          <p className="mt-1 text-sm text-secondary-500">{helperText}</p>
+          <p style={{ marginTop: '4px', fontSize: '14px', color: 'gray' }}>
+            {helperText}
+          </p>
         )}
       </div>
     )
