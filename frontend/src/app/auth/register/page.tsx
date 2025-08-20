@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardHeader, CardContent } from '@/components/ui/Card'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { ThemeToggle } from '../../../components/ui/ThemeToggle'
 import { apiClient } from '@/lib/api/client'
 
 export default function RegisterPage() {
