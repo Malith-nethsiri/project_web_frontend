@@ -10,38 +10,38 @@ html {
   color-scheme: light dark;
 }
 
-/* Light Theme (Default) */
+/* Light Theme (DEFAULT - TESTING WITH LIGHT GREEN) */
 :root,
 [data-theme="light"] {
-  /* Background Colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --bg-elevated: #ffffff;
+  /* Background Colors - LIGHT GREEN THEME */
+  --bg-primary: #90EE90;
+  --bg-secondary: #98FB98;
+  --bg-tertiary: #ADFF2F;
+  --bg-elevated: #90EE90;
   
   /* Text Colors */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-tertiary: #666666;
   --text-inverse: #ffffff;
   
   /* Border Colors */
-  --border-primary: #e2e8f0;
-  --border-secondary: #cbd5e1;
-  --border-focus: #3b82f6;
+  --border-primary: #32CD32;
+  --border-secondary: #228B22;
+  --border-focus: #00FF00;
   
   /* Interactive Colors */
-  --color-primary: #3b82f6;
-  --color-primary-hover: #2563eb;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-primary: #00FF00;
+  --color-primary-hover: #32CD32;
+  --color-success: #00FF00;
+  --color-warning: #FFD700;
+  --color-error: #FF6347;
   
   /* Input Specific */
   --input-bg: #ffffff;
-  --input-text: #0f172a;
-  --input-border: #d1d5db;
-  --input-placeholder: #9ca3af;
+  --input-text: #000000;
+  --input-border: #32CD32;
+  --input-placeholder: #666666;
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -122,8 +122,8 @@ body[data-theme="dark"] {
 }
 
 body[data-theme="light"] {
-  background-color: #ffffff !important;
-  color: #0f172a !important;
+  background-color: #90EE90 !important;
+  color: #000000 !important;
 }
 
 /* Input styling with proper theming */
@@ -156,10 +156,10 @@ input, textarea, select {
 [data-theme="light"] input, 
 [data-theme="light"] textarea, 
 [data-theme="light"] select {
-  color: #0f172a !important;
+  color: #000000 !important;
   background-color: #ffffff !important;
-  border-color: #d1d5db !important;
-  -webkit-text-fill-color: #0f172a !important;
+  border-color: #32CD32 !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
 /* Focus states */
@@ -298,9 +298,9 @@ button:disabled {
 
 /* Specific light mode card styling */
 [data-theme="light"] .card {
-  background-color: #ffffff !important;
-  border-color: #e2e8f0 !important;
-  color: #0f172a !important;
+  background-color: #98FB98 !important;
+  border-color: #32CD32 !important;
+  color: #000000 !important;
 }
 
 /* Override any remaining Tailwind classes */
