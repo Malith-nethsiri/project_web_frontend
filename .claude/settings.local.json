@@ -22,13 +22,17 @@
       "WebFetch(domain:www.valuerpro.online)",
       "Bash(rm:*)",
       "Bash(npm run build:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npx next:*)",
+      "WebFetch(domain:g.co)",
+      "WebFetch(domain:gemini.google.com)"
     ],
     "deny": [],
     "ask": [],
     "additionalDirectories": [
       "D:\\",
-      "D:\\temp_frontend"
+      "D:\\temp_frontend",
+      "D:\\mnt\\d\\project_website"
     ]
   }
 }
