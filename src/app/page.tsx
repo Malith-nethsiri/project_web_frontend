@@ -154,8 +154,8 @@ export default function Home() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-lg">VP</span>
+              <div className="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">VP</span>
               </div>
               <span className="text-2xl font-bold text-neutral-800">ValuerPro</span>
             </div>
@@ -245,37 +245,79 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* Hero Image/Mockup */}
+          {/* Hero Visual */}
           <motion.div 
-            className="mt-16 relative max-w-5xl mx-auto"
+            className="mt-16 relative max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
             <div className="relative">
-              <div className="bg-white rounded-2xl shadow-large p-8 border border-neutral-200">
-                <div className="aspect-video bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-xl flex items-center justify-center">
-                  <div className="text-center">
-                    <DocumentTextIcon className="h-16 w-16 text-neutral-400 mx-auto mb-4" />
-                    <p className="text-neutral-600 font-medium">Product Demo Screenshot</p>
-                    <p className="text-sm text-neutral-500">Coming Soon</p>
+              <div className="bg-white rounded-2xl shadow-large p-6 border border-neutral-200">
+                <div className="aspect-video bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-xl relative overflow-hidden">
+                  {/* Mock Dashboard Interface */}
+                  <div className="absolute inset-0 p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                        <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                        <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      </div>
+                      <div className="text-xs text-neutral-500 font-mono">ValuerPro Dashboard</div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                          <DocumentTextIcon className="h-4 w-4 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="h-2 bg-neutral-300 rounded w-3/4 mb-1"></div>
+                          <div className="h-1.5 bg-neutral-200 rounded w-1/2"></div>
+                        </div>
+                        <div className="w-12 h-6 bg-success rounded-full flex items-center justify-center">
+                          <div className="text-xs text-white font-medium">✓</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                          <CameraIcon className="h-4 w-4 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="h-2 bg-neutral-300 rounded w-2/3 mb-1"></div>
+                          <div className="h-1.5 bg-neutral-200 rounded w-1/3"></div>
+                        </div>
+                        <div className="w-12 h-6 bg-accent/20 rounded-full flex items-center justify-center">
+                          <div className="w-3 h-3 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-success rounded-lg flex items-center justify-center">
+                          <MapIcon className="h-4 w-4 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="h-2 bg-neutral-300 rounded w-4/5 mb-1"></div>
+                          <div className="h-1.5 bg-neutral-200 rounded w-2/5"></div>
+                        </div>
+                        <div className="w-12 h-6 bg-neutral-100 rounded-full"></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
               {/* Floating Elements */}
               <motion.div 
-                className="absolute -top-4 -right-4 bg-success text-white p-3 rounded-xl shadow-lg"
-                animate={{ y: [0, -10, 0] }}
+                className="absolute -top-2 -right-2 bg-success text-white p-2 rounded-lg shadow-lg"
+                animate={{ y: [0, -5, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <CheckIcon className="h-6 w-6" />
+                <CheckIcon className="h-4 w-4" />
               </motion.div>
               <motion.div 
-                className="absolute -bottom-4 -left-4 bg-accent text-white p-3 rounded-xl shadow-lg"
-                animate={{ y: [0, 10, 0] }}
+                className="absolute -bottom-2 -left-2 bg-accent text-white p-2 rounded-lg shadow-lg"
+                animate={{ y: [0, 5, 0] }}
                 transition={{ duration: 2, repeat: Infinity, delay: 1 }}
               >
-                <BoltIcon className="h-6 w-6" />
+                <BoltIcon className="h-4 w-4" />
               </motion.div>
             </div>
           </motion.div>
@@ -313,8 +355,8 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.gradient} p-4 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className="h-8 w-8 text-white" />
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${feature.gradient} p-3 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className="h-6 w-6 text-white" />
                 </div>
                 <h3 className="heading-sm mb-4 text-xl">{feature.title}</h3>
                 <p className="text-neutral-600 leading-relaxed">{feature.description}</p>
@@ -367,10 +409,12 @@ export default function Home() {
                   <p className="text-body max-w-lg">{step.description}</p>
                 </div>
 
-                {/* Visual (placeholder) */}
+                {/* Visual */}
                 <div className="flex-shrink-0 mt-8 lg:mt-0 lg:ml-12">
-                  <div className="w-64 h-40 bg-white rounded-xl shadow-card flex items-center justify-center border border-neutral-200">
-                    <step.icon className="h-12 w-12 text-neutral-400" />
+                  <div className="w-48 h-32 bg-white rounded-xl shadow-card border border-neutral-200 p-4">
+                    <div className="h-full bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg flex items-center justify-center">
+                      <step.icon className="h-8 w-8 text-neutral-400" />
+                    </div>
                   </div>
                 </div>
               </motion.div>

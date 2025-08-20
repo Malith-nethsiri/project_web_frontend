@@ -64,8 +64,8 @@ export default function LoginPage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-xl">VP</span>
+            <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center shadow-md">
+              <span className="text-white font-bold text-lg">VP</span>
             </div>
             <span className="text-3xl font-bold text-neutral-800">ValuerPro</span>
           </motion.div>
@@ -127,9 +127,9 @@ export default function LoginPage() {
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeSlashIcon className="h-5 w-5" />
+                      <EyeSlashIcon className="h-4 w-4" />
                     ) : (
-                      <EyeIcon className="h-5 w-5" />
+                      <EyeIcon className="h-4 w-4" />
                     )}
                   </button>
                 </div>
