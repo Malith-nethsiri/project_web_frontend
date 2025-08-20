@@ -70,20 +70,13 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: 'lightgray', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      padding: '16px' 
-    }}>
-      <div style={{ width: '100%', maxWidth: '400px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '30px', fontWeight: 'bold', color: 'black' }}>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 style={{ fontSize: '30px', fontWeight: 'bold' }}>
             ValuerPro
           </h1>
-          <p style={{ color: 'darkgray', marginTop: '8px' }}>Create your account</p>
+          <p className="mt-2">Create your account</p>
         </div>
 
         <Card>

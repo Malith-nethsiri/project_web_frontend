@@ -31,24 +31,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           name={inputId}
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '1px solid #d1d5db',
-            borderRadius: '6px',
-            fontSize: '16px',
-            color: '#333',
-            backgroundColor: '#fff',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            WebkitTextFillColor: '#333',
-            WebkitAppearance: 'none',
-            opacity: 1,
-            visibility: 'visible',
-            outline: 'none',
-            transition: 'border-color 0.2s'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#0070f3'}
-          onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+          style={{ width: '100%' }}
           {...props}
         />
         {error && (

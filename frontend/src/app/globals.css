@@ -1,115 +1,164 @@
-/* PRODUCTION CSS - Prevent browser account issues */
+/* PRODUCTION CSS - Light and Dark Mode Support */
 
 /* Basic reset */
 * {
   box-sizing: border-box;
 }
 
-/* Prevent extension overrides */
-input, textarea, select {
-  color: #333 !important;
-  background-color: #fff !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  -webkit-text-fill-color: #333 !important;
-  -webkit-appearance: none !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+/* Light mode (default) */
+:root {
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --border-color: #d1d5db;
+  --border-focus: #3b82f6;
+  --input-bg: #ffffff;
+  --input-text: #1a1a1a;
 }
 
-/* Prevent dark mode extension conflicts */
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
-  input, textarea, select {
-    color: #333 !important;
-    background-color: #fff !important;
-    -webkit-text-fill-color: #333 !important;
+  :root {
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --bg-primary: #111827;
+    --bg-secondary: #1f2937;
+    --border-color: #374151;
+    --border-focus: #60a5fa;
+    --input-bg: #1f2937;
+    --input-text: #f9fafb;
   }
 }
 
-/* Force all text to be visible */
-html, body, div, span, p, h1, h2, h3, h4, h5, h6, input, textarea, label {
-  color: #000 !important;
-  -webkit-text-fill-color: #000 !important;
+/* Base styling */
+html, body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+/* Input styling that works in both light and dark modes */
+input, textarea, select {
+  color: var(--input-text) !important;
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  -webkit-text-fill-color: var(--input-text) !important;
+  -webkit-appearance: none !important;
   opacity: 1 !important;
   visibility: visible !important;
+  font-size: 16px;
+  padding: 12px;
+  border-radius: 6px;
+  transition: border-color 0.2s;
 }
 
-/* CRITICAL: Override Tailwind text-transparent class */
+/* Focus states */
+input:focus, textarea:focus, select:focus {
+  border-color: var(--border-focus) !important;
+  outline: 2px solid var(--border-focus) !important;
+  outline-offset: -2px !important;
+}
+
+/* Placeholder styling */
+input::placeholder, textarea::placeholder {
+  color: var(--text-secondary) !important;
+  opacity: 0.7 !important;
+}
+
+/* Text elements */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary) !important;
+  margin: 0;
+}
+
+p, span, label, div {
+  color: var(--text-primary) !important;
+}
+
+/* Links */
+a {
+  color: var(--border-focus) !important;
+  text-decoration: none;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Override any remaining Tailwind classes */
 .text-transparent {
-  color: #000 !important;
-  -webkit-text-fill-color: #000 !important;
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
 }
 
-/* Override any bg-clip-text without proper gradient */
 .bg-clip-text {
   -webkit-background-clip: initial !important;
   background-clip: initial !important;
-  color: #000 !important;
+  color: var(--text-primary) !important;
 }
 
-/* Safe defaults for text fields - ChatGPT recommended */
-input, textarea, [contenteditable="true"] {
-  color: #111 !important;          /* Dark text */
-  background-color: #fff !important; /* White background */
-  caret-color: currentColor !important;
-  font-size: 16px !important;
-  line-height: 1.4 !important;
-  text-indent: 0 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  -webkit-text-fill-color: #111 !important; /* fights WebKit/autofill oddities */
-  -webkit-appearance: none !important;
-  font-family: Arial, sans-serif !important;
+/* Error text styling */
+.text-red-600, .error-text {
+  color: #dc2626 !important;
 }
 
-/* Placeholder visible but distinct */
-input::placeholder, textarea::placeholder {
-  color: #9aa !important;
-  opacity: 1 !important;
+@media (prefers-color-scheme: dark) {
+  .text-red-600, .error-text {
+    color: #fca5a5 !important;
+  }
 }
 
-/* Kill accidental masking */
-input {
-  -webkit-text-security: none !important;
+/* Button styling */
+button {
+  background-color: var(--border-focus);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-/* Override any potential text-transparent classes */
-.text-transparent input,
-input.text-transparent {
-  color: #111 !important;
-  -webkit-text-fill-color: #111 !important;
+button:hover {
+  opacity: 0.9;
 }
 
-/* Force visibility on focus */
-input:focus, textarea:focus {
-  color: #111 !important;
-  background-color: #fff !important;
-  -webkit-text-fill-color: #111 !important;
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Basic layout styles */
-body {
-  background: #f0f0f0 !important;
-  color: #111 !important;
-  font-family: Arial, sans-serif !important;
+/* Layout utilities */
+.w-full { width: 100%; }
+.max-w-md { max-width: 28rem; }
+.min-h-screen { min-height: 100vh; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.text-center { text-align: center; }
+.p-4 { padding: 1rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-6 { margin-top: 1.5rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+
+/* Card styling */
+.card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Ensure form containers are visible */
-form, div {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Override any dark mode issues */
-.dark input, .dark textarea {
-  color: #111 !important;
-  background-color: #fff !important;
-}
-
-/* Test visibility with bright colors */
-.test-input {
-  background: yellow !important;
-  color: red !important;
-  border: 3px solid blue !important;
-  font-size: 20px !important;
-  font-weight: bold !important;
+@media (prefers-color-scheme: dark) {
+  .card {
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
+  }
 }
