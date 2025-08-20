@@ -18,6 +18,19 @@ html, body, div, span, p, h1, h2, h3, h4, h5, h6, input, textarea, label {
   visibility: visible !important;
 }
 
+/* CRITICAL: Override Tailwind text-transparent class */
+.text-transparent {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+/* Override any bg-clip-text without proper gradient */
+.bg-clip-text {
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  color: #000 !important;
+}
+
 /* Safe defaults for text fields - ChatGPT recommended */
 input, textarea, [contenteditable="true"] {
   color: #111 !important;          /* Dark text */
