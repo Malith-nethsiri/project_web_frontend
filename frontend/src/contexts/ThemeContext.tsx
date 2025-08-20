@@ -20,6 +20,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return
+    
     const savedTheme = localStorage.getItem('theme') as Theme | null
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     
@@ -43,6 +46,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Listen for system theme changes
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return
+    
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     
     const handleChange = (e: MediaQueryListEvent) => {
@@ -59,7 +65,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Update effective theme when theme changes
   useEffect(() => {
-    if (!mounted) return
+    if (!mounted || typeof window === 'undefined') return
 
     let newEffective: 'light' | 'dark'
 
@@ -77,7 +83,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme)
-    localStorage.setItem('theme', newTheme)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme)
+    }
   }
 
   const toggleTheme = () => {

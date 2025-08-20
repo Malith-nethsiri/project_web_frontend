@@ -17,8 +17,8 @@ export function ThemeToggle() {
     return `System (${effectiveTheme})`
   }
 
-  // Debug log
-  console.log('Theme Toggle State:', { theme, effectiveTheme, documentTheme: document.documentElement.getAttribute('data-theme') })
+  // Debug log (safe for SSR)
+  console.log('Theme Toggle State:', { theme, effectiveTheme })
 
   return (
     <button
