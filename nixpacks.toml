@@ -1,0 +1,9 @@
+[phases.build]
+cmd = "npm run build"
+
+[phases.start] 
+cmd = "node .next/standalone/server.js"
+
+[variables]
+NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
