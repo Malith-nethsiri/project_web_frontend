@@ -1,46 +1,47 @@
-import { InputHTMLAttributes, forwardRef } from 'react'
-import { clsx } from 'clsx'
+import React from 'react'
+import { cn } from '../../lib/utils'
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  error?: string
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  error?: boolean
   helperText?: string
+  label?: string
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, helperText, id, ...props }, ref) => {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, error, helperText, label, id, ...props }, ref) => {
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
     
     return (
-      <div style={{ width: '100%' }}>
+      <div className="space-y-2">
         {label && (
           <label 
             htmlFor={inputId} 
-            style={{ 
-              display: 'block', 
-              fontSize: '14px', 
-              fontWeight: '500', 
-              color: 'black',
-              marginBottom: '4px' 
-            }}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {label}
           </label>
         )}
         <input
-          ref={ref}
           id={inputId}
-          name={inputId}
-          style={{ width: '100%' }}
+          type={type}
+          className={cn(
+            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+            error && "border-destructive focus-visible:ring-destructive",
+            className
+          )}
+          ref={ref}
+          aria-invalid={error}
+          aria-describedby={helperText ? `${inputId}-helper` : undefined}
           {...props}
         />
-        {error && (
-          <p style={{ marginTop: '4px', fontSize: '14px', color: 'red' }}>
-            {error}
-          </p>
-        )}
-        {helperText && !error && (
-          <p style={{ marginTop: '4px', fontSize: '14px', color: 'gray' }}>
+        {helperText && (
+          <p 
+            id={`${inputId}-helper`}
+            className={cn(
+              "text-sm",
+              error ? "text-destructive" : "text-muted-foreground"
+            )}
+          >
             {helperText}
           </p>
         )}
@@ -49,4 +50,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 )
 
-Input.displayName = 'Input'
+Input.displayName = "Input"
+
+export { Input }

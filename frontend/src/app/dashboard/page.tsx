@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { PlusIcon, DocumentTextIcon, ClockIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
-import { Button } from '@/components/ui/Button'
-import { Card, CardHeader, CardContent } from '@/components/ui/Card'
-import { apiClient } from '@/lib/api/client'
+import { DashboardShell } from '../../components/layout/DashboardShell'
+import { Button } from '../../components/ui/Button'
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '../../components/ui/Card'
 
 interface Report {
   id: number
@@ -19,9 +19,9 @@ interface Report {
 }
 
 const statusColors = {
-  draft: 'bg-gray-100 text-gray-800',
+  draft: 'bg-muted text-muted-foreground',
   in_progress: 'bg-blue-100 text-blue-800',
-  completed: 'bg-green-100 text-green-800',
+  completed: 'bg-green-100 text-green-800', 
   exported: 'bg-purple-100 text-purple-800'
 }
 
@@ -32,11 +32,38 @@ const statusIcons = {
   exported: CheckCircleIcon
 }
 
+// Mock data for now
+const mockReports: Report[] = [
+  {
+    id: 1,
+    reference_number: 'VR-2024-001',
+    title: 'Residential Property Valuation - 123 Main St',
+    status: 'completed',
+    purpose: 'Mortgage',
+    created_at: '2024-01-15T10:00:00Z',
+  },
+  {
+    id: 2,
+    reference_number: 'VR-2024-002', 
+    title: 'Commercial Building Assessment',
+    status: 'in_progress',
+    purpose: 'Insurance',
+    created_at: '2024-01-18T14:30:00Z',
+  },
+  {
+    id: 3,
+    reference_number: 'VR-2024-003',
+    title: 'Land Valuation - Rural Property',
+    status: 'draft',
+    purpose: 'Sale',
+    created_at: '2024-01-20T09:15:00Z',
+  }
+]
+
 export default function DashboardPage() {
   const router = useRouter()
-  const [reports, setReports] = useState<Report[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [reports, setReports] = useState<Report[]>(mockReports)
+  const [isLoading, setIsLoading] = useState(false)
   const [stats, setStats] = useState({
     total: 0,
     draft: 0,
@@ -45,42 +72,20 @@ export default function DashboardPage() {
   })
 
   useEffect(() => {
-    loadDashboardData()
-  }, [])
+    // Calculate stats from mock data
+    const now = new Date()
+    const thisMonth = reports.filter((report: Report) => {
+      const reportDate = new Date(report.created_at)
+      return reportDate.getMonth() === now.getMonth() && reportDate.getFullYear() === now.getFullYear()
+    })
 
-  const loadDashboardData = async () => {
-    try {
-      setIsLoading(true)
-      
-      // Load user data
-      const userResponse = await apiClient.getCurrentUser()
-      setUser(userResponse.data)
-
-      // Load reports
-      const reportsResponse = await apiClient.getReports()
-      const reportsData = reportsResponse.data
-      setReports(reportsData)
-
-      // Calculate stats
-      const now = new Date()
-      const thisMonth = reportsData.filter((report: Report) => {
-        const reportDate = new Date(report.created_at)
-        return reportDate.getMonth() === now.getMonth() && reportDate.getFullYear() === now.getFullYear()
-      })
-
-      setStats({
-        total: reportsData.length,
-        draft: reportsData.filter((r: Report) => r.status === 'draft').length,
-        completed: reportsData.filter((r: Report) => r.status === 'completed').length,
-        thisMonth: thisMonth.length
-      })
-
-    } catch (error) {
-      console.error('Failed to load dashboard data:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+    setStats({
+      total: reports.length,
+      draft: reports.filter((r: Report) => r.status === 'draft').length,
+      completed: reports.filter((r: Report) => r.status === 'completed').length,
+      thisMonth: thisMonth.length
+    })
+  }, [reports])
 
   const handleCreateReport = () => {
     router.push('/reports/create')
@@ -101,151 +106,124 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-secondary-600">Loading dashboard...</p>
+      <DashboardShell>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
+          </div>
         </div>
-      </div>
+      </DashboardShell>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-secondary-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/dashboard">
-                <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                  ValuerPro
-                </h1>
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-secondary-600">
-                Welcome, {user?.email}
-              </span>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  localStorage.removeItem('access_token')
-                  router.push('/')
-                }}
-              >
-                Sign Out
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <DashboardShell>
+      <div className="space-y-8">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-secondary-900 mb-2">Dashboard</h2>
-          <p className="text-secondary-600">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground">
             Manage your valuation reports and track your progress.
           </p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Reports</CardTitle>
+              <DocumentTextIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-secondary-600">Total Reports</p>
-                  <p className="text-2xl font-bold text-secondary-900">{stats.total}</p>
-                </div>
-                <DocumentTextIcon className="h-8 w-8 text-primary-600" />
-              </div>
+              <div className="text-2xl font-bold">{stats.total}</div>
+              <p className="text-xs text-muted-foreground">All time</p>
             </CardContent>
           </Card>
 
           <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Draft Reports</CardTitle>
+              <ClockIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-secondary-600">Draft Reports</p>
-                  <p className="text-2xl font-bold text-secondary-900">{stats.draft}</p>
-                </div>
-                <ClockIcon className="h-8 w-8 text-yellow-600" />
-              </div>
+              <div className="text-2xl font-bold">{stats.draft}</div>
+              <p className="text-xs text-muted-foreground">In progress</p>
             </CardContent>
           </Card>
 
           <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Completed</CardTitle>
+              <CheckCircleIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-secondary-600">Completed</p>
-                  <p className="text-2xl font-bold text-secondary-900">{stats.completed}</p>
-                </div>
-                <CheckCircleIcon className="h-8 w-8 text-green-600" />
-              </div>
+              <div className="text-2xl font-bold">{stats.completed}</div>
+              <p className="text-xs text-muted-foreground">Finished reports</p>
             </CardContent>
           </Card>
 
           <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">This Month</CardTitle>
+              <DocumentTextIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-secondary-600">This Month</p>
-                  <p className="text-2xl font-bold text-secondary-900">{stats.thisMonth}</p>
-                </div>
-                <DocumentTextIcon className="h-8 w-8 text-blue-600" />
-              </div>
+              <div className="text-2xl font-bold">{stats.thisMonth}</div>
+              <p className="text-xs text-muted-foreground">Created this month</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8">
-          <Card>
-            <CardHeader>
-              <h3 className="text-lg font-semibold text-secondary-900">Quick Actions</h3>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Button
-                  onClick={handleCreateReport}
-                  className="flex items-center justify-center space-x-2"
-                  size="lg"
-                >
-                  <PlusIcon className="h-5 w-5" />
-                  <span>New Report</span>
-                </Button>
-                
-                <Button
-                  variant="secondary"
-                  onClick={() => router.push('/profile')}
-                  size="lg"
-                >
-                  Update Profile
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  onClick={() => router.push('/reports')}
-                  size="lg"
-                >
-                  View All Reports
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>
+              Common tasks and shortcuts to get work done faster.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Button
+                onClick={handleCreateReport}
+                className="flex items-center justify-center space-x-2"
+                size="lg"
+              >
+                <PlusIcon className="h-4 w-4" />
+                <span>Create Report</span>
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => router.push('/profile')}
+                size="lg"
+              >
+                Update Profile
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => router.push('/reports')}
+                size="lg"
+              >
+                View All Reports
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Recent Reports */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-secondary-900">Recent Reports</h3>
+              <div>
+                <CardTitle>Recent Reports</CardTitle>
+                <CardDescription>Your latest valuation reports</CardDescription>
+              </div>
               <Link
                 href="/reports"
-                className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                className="text-sm font-medium text-primary hover:underline"
               >
                 View all
               </Link>
@@ -254,9 +232,9 @@ export default function DashboardPage() {
           <CardContent>
             {reports.length === 0 ? (
               <div className="text-center py-8">
-                <DocumentTextIcon className="h-12 w-12 text-secondary-400 mx-auto mb-4" />
-                <h4 className="text-lg font-medium text-secondary-900 mb-2">No reports yet</h4>
-                <p className="text-secondary-600 mb-4">
+                <DocumentTextIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-medium mb-2">No reports yet</h3>
+                <p className="text-muted-foreground mb-4">
                   Get started by creating your first valuation report.
                 </p>
                 <Button onClick={handleCreateReport}>
@@ -269,13 +247,13 @@ export default function DashboardPage() {
                 {reports.slice(0, 5).map((report) => (
                   <div
                     key={report.id}
-                    className="flex items-center justify-between p-4 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors"
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
                   >
                     <div className="flex items-center space-x-4">
-                      <DocumentTextIcon className="h-8 w-8 text-secondary-400" />
+                      <DocumentTextIcon className="h-8 w-8 text-muted-foreground" />
                       <div>
-                        <h4 className="font-medium text-secondary-900">{report.title}</h4>
-                        <p className="text-sm text-secondary-600">
+                        <h4 className="font-medium">{report.title}</h4>
+                        <p className="text-sm text-muted-foreground">
                           Ref: {report.reference_number} • Created {formatDate(report.created_at)}
                         </p>
                       </div>
@@ -289,7 +267,7 @@ export default function DashboardPage() {
                       </span>
                       <Link
                         href={`/reports/${report.id}`}
-                        className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                        className="text-sm font-medium text-primary hover:underline"
                       >
                         View →
                       </Link>
@@ -301,6 +279,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </DashboardShell>
   )
 }
