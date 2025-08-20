@@ -210,14 +210,35 @@ button:disabled {
   box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
 }
 
-/* Input component styles */
-input {
+/* Input component styles - Force visibility */
+input, textarea, select {
   color: #333 !important;
   background-color: #fff !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
 }
 
-input::placeholder {
+input::placeholder, textarea::placeholder {
   color: #9ca3af !important;
+}
+
+/* Force text visibility everywhere */
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+input[type="search"],
+input[type="tel"],
+input[type="url"] {
+  color: #333 !important;
+  background-color: #fff !important;
+  -webkit-text-fill-color: #333 !important;
+  -webkit-appearance: none !important;
+}
+
+/* Override any potential Inter font issues */
+.form-input, input.form-input {
+  color: #333 !important;
+  background-color: #fff !important;
+  -webkit-text-fill-color: #333 !important;
 }
 
 .block {
