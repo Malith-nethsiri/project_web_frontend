@@ -28,11 +28,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             border: '3px solid blue',
             borderRadius: '8px',
             fontSize: '18px',
-            color: 'black !important',
-            backgroundColor: 'yellow !important',
+            color: 'black',
+            backgroundColor: 'yellow',
             fontWeight: 'bold',
-            webkitTextFillColor: 'black',
-            webkitAppearance: 'none',
+            WebkitTextFillColor: 'black',
+            WebkitAppearance: 'none',
             opacity: 1,
             visibility: 'visible'
           }}
