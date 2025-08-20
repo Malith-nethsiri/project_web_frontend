@@ -1,20 +1,74 @@
-/* SIMPLE TEST CSS - Testing if CSS loads at all */
+/* ChatGPT Safe Defaults Fix Pack for Invisible Text */
 
-/* Make everything super visible for debugging */
-body {
-  background: red !important;
-  color: white !important;
-}
-
-/* Force input visibility */
-input {
-  background: yellow !important;
-  color: black !important;
-  border: 5px solid blue !important;
-  font-size: 20px !important;
-}
-
-/* Basic reset */
+/* Global reset that might be needed */
 * {
   box-sizing: border-box;
+}
+
+/* Safe defaults for text fields - ChatGPT recommended */
+input, textarea, [contenteditable="true"] {
+  color: #111 !important;          /* Dark text */
+  background-color: #fff !important; /* White background */
+  caret-color: currentColor !important;
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+  text-indent: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  -webkit-text-fill-color: #111 !important; /* fights WebKit/autofill oddities */
+  -webkit-appearance: none !important;
+  font-family: Arial, sans-serif !important;
+}
+
+/* Placeholder visible but distinct */
+input::placeholder, textarea::placeholder {
+  color: #9aa !important;
+  opacity: 1 !important;
+}
+
+/* Kill accidental masking */
+input {
+  -webkit-text-security: none !important;
+}
+
+/* Override any potential text-transparent classes */
+.text-transparent input,
+input.text-transparent {
+  color: #111 !important;
+  -webkit-text-fill-color: #111 !important;
+}
+
+/* Force visibility on focus */
+input:focus, textarea:focus {
+  color: #111 !important;
+  background-color: #fff !important;
+  -webkit-text-fill-color: #111 !important;
+}
+
+/* Basic layout styles */
+body {
+  background: #f0f0f0 !important;
+  color: #111 !important;
+  font-family: Arial, sans-serif !important;
+}
+
+/* Ensure form containers are visible */
+form, div {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Override any dark mode issues */
+.dark input, .dark textarea {
+  color: #111 !important;
+  background-color: #fff !important;
+}
+
+/* Test visibility with bright colors */
+.test-input {
+  background: yellow !important;
+  color: red !important;
+  border: 3px solid blue !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
 }

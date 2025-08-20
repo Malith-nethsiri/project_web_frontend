@@ -28,18 +28,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             border: '3px solid blue',
             borderRadius: '8px',
             fontSize: '18px',
-            color: 'black',
-            backgroundColor: 'yellow',
-            fontWeight: 'bold'
+            color: 'black !important',
+            backgroundColor: 'yellow !important',
+            fontWeight: 'bold',
+            webkitTextFillColor: 'black',
+            webkitAppearance: 'none',
+            opacity: 1,
+            visibility: 'visible'
           }}
-          className={clsx(
-            'form-input w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-offset-0 transition-colors',
-            {
-              'border-secondary-300 focus:border-primary-500 focus:ring-primary-500': !error,
-              'border-red-300 focus:border-red-500 focus:ring-red-500': error,
-            },
-            className
-          )}
+          className="test-input"
           {...props}
         />
         {error && (
