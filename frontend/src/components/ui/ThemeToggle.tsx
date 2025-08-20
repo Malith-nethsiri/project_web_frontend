@@ -1,9 +1,39 @@
 'use client'
 
 import { useTheme } from '../../contexts/ThemeContext'
+import { useState, useEffect } from 'react'
 
 export function ThemeToggle() {
   const { theme, effectiveTheme, toggleTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Only render after hydration to prevent SSR mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    // Return a placeholder that matches the expected size during SSR
+    return (
+      <div
+        style={{
+          background: '#f3f4f6',
+          border: '1px solid #d1d5db',
+          borderRadius: '8px',
+          padding: '8px 12px',
+          minWidth: '120px',
+          height: '36px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '14px',
+          color: '#6b7280'
+        }}
+      >
+        Loading...
+      </div>
+    )
+  }
 
   const getIcon = () => {
     if (theme === 'light') return '☀️'
