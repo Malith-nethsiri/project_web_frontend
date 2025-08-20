@@ -6,7 +6,7 @@ import { ThemeProvider } from '../contexts/ThemeContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ValuerPro - AI-Powered Valuation Reports',
+  title: 'ValuerPro - AI-Powered Valuation Reports v2',
   description: 'Professional valuation report generation platform for certified valuers',
   keywords: ['valuation', 'property', 'AI', 'OCR', 'reports'],
   icons: {
