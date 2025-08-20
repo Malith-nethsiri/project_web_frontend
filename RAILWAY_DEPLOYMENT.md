@@ -106,26 +106,43 @@ The following files have been added to optimize Railway deployment:
 {
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS",
-    "buildCommand": "npm run build"
+    "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "npm start",
+    "startCommand": "npm run start:railway",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
 }
 ```
 
-### `next.config.js` (Updated)
-- Added `output: 'standalone'` for Docker optimization
-- Added security headers
-- Configured for Railway deployment
+### `nixpacks.toml`
+```toml
+[phases.setup]
+nixPkgs = ["nodejs_18", "npm"]
 
-### `Dockerfile` (Optional)
-- Multi-stage build for optimal performance
-- Production-ready configuration
-- Minimal image size
+[phases.install]
+cmd = "npm ci"
+
+[phases.build]
+cmd = "npm run build"
+
+[phases.start] 
+cmd = "npm run start:railway"
+
+[variables]
+NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
+```
+
+### `next.config.js` (Updated)
+- Added security headers for production
+- Configured environment variables
+- Optimized for Railway deployment
+
+### `package.json` (Updated)
+- Standard Next.js build and start commands
+- Railway-specific start command with PORT variable
 
 ## 🔗 Connecting Services
 

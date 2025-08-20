@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
-  experimental: {
-    serverComponentsExternalPackages: [],
-  },
   images: {
     domains: ['localhost', 'valuerpro-uploads.s3.eu-north-1.amazonaws.com'],
     unoptimized: false,
