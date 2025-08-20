@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(cp:*)",
+      "Bash(true)",
+      "Bash(git remote set-url:*)",
+      "Bash(git pull:*)",
+      "Bash(git checkout:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git clone:*)",
+      "Bash(sed:*)",
+      "Bash(git remote remove:*)",
+      "WebFetch(domain:account.squarespace.com)",
+      "WebFetch(domain:support.squarespace.com)",
+      "WebFetch(domain:vercel.com)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run lint)",
+      "Bash(find:*)",
+      "WebFetch(domain:www.valuerpro.online)",
+      "Bash(rm:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "additionalDirectories": [
+      "D:\\",
+      "D:\\temp_frontend"
+    ]
+  }
+}
