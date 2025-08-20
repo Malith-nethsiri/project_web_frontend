@@ -30,9 +30,12 @@ export default function Home() {
               >
                 Sign In
               </Link>
-              <Button asChild>
-                <Link href="/auth/register">Get Started</Link>
-              </Button>
+              <Link
+                href="/auth/register"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+              >
+                Get Started
+              </Link>
             </div>
           </div>
         </div>
@@ -60,12 +63,13 @@ export default function Home() {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="text-lg px-8 py-4" asChild>
-                  <Link href="/auth/register" className="inline-flex items-center">
-                    Create Your First Report
-                    <ArrowRightIcon className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
+                <Link 
+                  href="/auth/register"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 py-4"
+                >
+                  Create Your First Report
+                  <ArrowRightIcon className="ml-2 h-5 w-5" />
+                </Link>
                 <Button variant="outline" size="lg" className="text-lg px-8 py-4">
                   Watch 60-sec Demo
                 </Button>
@@ -340,12 +344,13 @@ export default function Home() {
             Join 500+ professional valuers already saving hours per report
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50" asChild>
-              <Link href="/auth/register" className="inline-flex items-center">
-                Start Your Free Trial
-                <ArrowRightIcon className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            <Link 
+              href="/auth/register"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-white text-blue-600 hover:bg-blue-50 h-11 px-8"
+            >
+              Start Your Free Trial
+              <ArrowRightIcon className="ml-2 h-5 w-5" />
+            </Link>
             <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
               Schedule Demo
             </Button>
