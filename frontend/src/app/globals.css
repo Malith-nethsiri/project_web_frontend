@@ -222,6 +222,38 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Custom button classes */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-secondary);
+}
+
 /* Theme toggle specific styling */
 .theme-toggle:hover {
   background-color: var(--bg-tertiary) !important;

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowRightIcon, DocumentTextIcon, CameraIcon, MapIcon } from '@heroicons/react/24/outline'
+import { ThemeToggle } from '../components/ui/ThemeToggle'
 
 export default function Home() {
   return (
@@ -10,12 +11,13 @@ export default function Home() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
                   ValuerPro
                 </h1>
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <Link
                 href="/auth/login"
                 className="text-secondary-600 hover:text-secondary-900 font-medium"
@@ -39,7 +41,7 @@ export default function Home() {
           <div className="text-center">
             <h1 className="text-4xl sm:text-6xl font-bold text-secondary-900 mb-6">
               AI-Powered 
-              <span className="bg-gradient-primary bg-clip-text text-transparent block sm:inline">
+              <span className="block sm:inline" style={{ color: 'var(--color-primary)' }}>
                 {' '}Valuation Reports
               </span>
             </h1>
