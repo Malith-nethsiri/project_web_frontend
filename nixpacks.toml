@@ -1,14 +1,15 @@
 [phases.setup]
-nixPkgs = ["python", "pip"]
+nixPkgs = ["nodejs_18", "npm-9_x"]
 
 [phases.install]
-cmd = "echo 'Backend installation'"
+cmd = "npm ci"
 
 [phases.build]
-cmd = "echo 'Backend build'"
+cmd = "npm run build"
 
-[phases.start] 
-cmd = "echo 'Backend start'"
+[phases.start]
+cmd = "npm start"
 
 [variables]
 NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
