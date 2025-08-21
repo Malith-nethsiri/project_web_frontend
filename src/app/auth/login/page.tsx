@@ -1,179 +1,152 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Card, CardHeader, CardContent } from '@/components/ui/Card'
-import { apiClient } from '@/lib/api/client'
-import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useAuthStore } from '@/stores/auth'
+import { useRedirectIfAuthenticated } from '@/hooks/use-auth'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  
+  const { login, isLoading, error, clearError } = useAuthStore()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  
+  useRedirectIfAuthenticated()
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    setErrors({})
-
+    clearError()
+    
     try {
-      await apiClient.login(formData.email, formData.password)
-      router.push('/dashboard')
-    } catch (error: any) {
-      setErrors({
-        general: error.response?.data?.detail || 'Login failed. Please try again.'
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }))
+      await login(email, password)
+      const redirectTo = searchParams.get('redirect') || '/dashboard'
+      router.push(redirectTo)
+    } catch (error) {
+      // Error is handled by the store
     }
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-hero opacity-5"></div>
-      <div className="absolute -top-40 -right-40 w-80 h-80 bg-accent/10 rounded-full blur-3xl"></div>
-      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 px-4">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       
-      <motion.div 
-        className="w-full max-w-md relative z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
+      <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <motion.div 
-            className="flex items-center justify-center space-x-3 mb-4"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center shadow-md">
-              <span className="text-white font-bold text-lg">VP</span>
-            </div>
-            <span className="text-3xl font-bold text-neutral-800">ValuerPro</span>
-          </motion.div>
-          <motion.p 
-            className="text-neutral-600 text-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Welcome back! Sign in to your account
-          </motion.p>
+          <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400">
+            ValuerPro
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            Professional Property Valuation Platform
+          </p>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <Card className="card-premium p-8 border-0 shadow-large">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {errors.general && (
-                <motion.div 
-                  className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  {errors.general}
-                </motion.div>
+        <Card>
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl text-center">Sign In</CardTitle>
+            <CardDescription className="text-center">
+              Enter your credentials to access your account
+            </CardDescription>
+          </CardHeader>
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-md">
+                  {error}
+                </div>
               )}
-
-              <div className="space-y-4">
+              
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Email
+                </label>
                 <Input
+                  id="email"
                   type="email"
-                  label="Email Address"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  error={!!errors.email}
-                  helperText={errors.email}
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
-                  autoComplete="email"
-                  className="rounded-xl border-neutral-300 focus:border-primary focus:ring-primary"
+                  disabled={isLoading}
                 />
+              </div>
 
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Password
+                </label>
                 <div className="relative">
                   <Input
-                    type={showPassword ? "text" : "password"}
-                    label="Password"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
-                    error={!!errors.password}
-                    helperText={errors.password}
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
-                    autoComplete="current-password"
-                    className="rounded-xl border-neutral-300 focus:border-primary focus:ring-primary pr-12"
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-9 text-neutral-500 hover:text-neutral-700"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-600 dark:text-gray-400"
                     onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
                   >
-                    {showPassword ? (
-                      <EyeSlashIcon className="h-4 w-4" />
-                    ) : (
-                      <EyeIcon className="h-4 w-4" />
-                    )}
+                    {showPassword ? 'Hide' : 'Show'}
                   </button>
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="btn-primary w-full text-lg py-4 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!formData.email || !formData.password || isLoading}
-              >
-                {isLoading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Signing In...
-                  </div>
-                ) : (
-                  <>
-                    Sign In
-                    <ArrowRightIcon className="ml-2 h-5 w-5" />
-                  </>
-                )}
-              </button>
-              
-              <div className="text-center mt-4">
-                <Link href="/forgot-password" className="text-primary hover:text-primary/80 font-medium text-sm">
-                  Forgot your password?
+              <div className="flex items-center justify-between text-sm">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    className="rounded border-gray-300 dark:border-gray-600"
+                  />
+                  <span className="text-gray-600 dark:text-gray-400">Remember me</span>
+                </label>
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-primary-600 dark:text-primary-400 hover:underline"
+                >
+                  Forgot password?
                 </Link>
               </div>
-            </form>
-            
-            <div className="mt-8 text-center">
-              <p className="text-neutral-600">
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-4">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading || !email || !password}
+              >
+                {isLoading ? 'Signing In...' : 'Sign In'}
+              </Button>
+              
+              <p className="text-center text-sm text-gray-600 dark:text-gray-400">
                 Don&apos;t have an account?{' '}
                 <Link
                   href="/auth/register"
-                  className="text-primary hover:text-primary/80 font-semibold"
+                  className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
                 >
-                  Create Account
+                  Sign up
                 </Link>
               </p>
-            </div>
-          </Card>
-        </motion.div>
-      </motion.div>
+            </CardFooter>
+          </form>
+        </Card>
+
+        <div className="mt-8 text-center text-xs text-gray-500 dark:text-gray-400">
+          © 2025 ValuerPro. All rights reserved.
+        </div>
+      </div>
     </div>
   )
 }

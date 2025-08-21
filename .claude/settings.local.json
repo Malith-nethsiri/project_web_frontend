@@ -32,7 +32,10 @@
       "Bash(mv:*)",
       "Bash(git rm:*)",
       "Bash(railway status:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npx create-next-app:*)",
+      "Bash(mkdir:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": [],

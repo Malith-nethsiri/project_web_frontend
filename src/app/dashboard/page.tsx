@@ -1,284 +1,297 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { PlusIcon, DocumentTextIcon, ClockIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
-import { DashboardShell } from '../../components/layout/DashboardShell'
-import { Button } from '../../components/ui/Button'
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '../../components/ui/Card'
-
-interface Report {
-  id: number
-  reference_number: string
-  title: string
-  status: 'draft' | 'in_progress' | 'completed' | 'exported'
-  purpose: string
-  created_at: string
-  updated_at?: string
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+// Using emoji icons instead of Heroicons to avoid dependency issues
+const icons = {
+  DocumentTextIcon: '📄',
+  ClockIcon: '⏰',
+  CheckCircleIcon: '✅',
+  ExclamationTriangleIcon: '⚠️',
+  PlusIcon: '➕',
+  ArrowTrendingUpIcon: '📈',
 }
 
-const statusColors = {
-  draft: 'bg-muted text-muted-foreground',
-  in_progress: 'bg-blue-100 text-blue-800',
-  completed: 'bg-green-100 text-green-800', 
-  exported: 'bg-purple-100 text-purple-800'
+// Mock data - replace with actual API calls
+const mockStats = {
+  totalReports: 47,
+  inProgress: 12,
+  completed: 30,
+  pending: 5,
 }
 
-const statusIcons = {
-  draft: ClockIcon,
-  in_progress: ClockIcon,
-  completed: CheckCircleIcon,
-  exported: CheckCircleIcon
-}
-
-// Mock data for now
-const mockReports: Report[] = [
+const mockRecentReports = [
   {
-    id: 1,
-    reference_number: 'VR-2024-001',
-    title: 'Residential Property Valuation - 123 Main St',
+    id: '1',
+    title: 'Residential Property Valuation - Colombo 07',
     status: 'completed',
-    purpose: 'Mortgage',
-    created_at: '2024-01-15T10:00:00Z',
+    created_at: '2025-01-20T10:30:00Z',
+    purpose: 'mortgage',
   },
   {
-    id: 2,
-    reference_number: 'VR-2024-002', 
-    title: 'Commercial Building Assessment',
+    id: '2',
+    title: 'Commercial Property - Kandy Road',
     status: 'in_progress',
-    purpose: 'Insurance',
-    created_at: '2024-01-18T14:30:00Z',
+    created_at: '2025-01-19T14:15:00Z',
+    purpose: 'sale',
   },
   {
-    id: 3,
-    reference_number: 'VR-2024-003',
-    title: 'Land Valuation - Rural Property',
-    status: 'draft',
-    purpose: 'Sale',
-    created_at: '2024-01-20T09:15:00Z',
-  }
+    id: '3',
+    title: 'Land Valuation - Gampaha District',
+    status: 'pending',
+    created_at: '2025-01-18T09:45:00Z',
+    purpose: 'insurance',
+  },
+  {
+    id: '4',
+    title: 'Apartment Complex - Moratuwa',
+    status: 'completed',
+    created_at: '2025-01-17T16:20:00Z',
+    purpose: 'legal',
+  },
 ]
 
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'completed':
+      return 'success'
+    case 'in_progress':
+      return 'default'
+    case 'pending':
+      return 'warning'
+    default:
+      return 'secondary'
+  }
+}
+
+const getStatusIcon = (status: string) => {
+  switch (status) {
+    case 'completed':
+      return icons.CheckCircleIcon
+    case 'in_progress':
+      return icons.ClockIcon
+    case 'pending':
+      return icons.ExclamationTriangleIcon
+    default:
+      return icons.DocumentTextIcon
+  }
+}
+
 export default function DashboardPage() {
-  const router = useRouter()
-  const [reports, setReports] = useState<Report[]>(mockReports)
-  const [isLoading, setIsLoading] = useState(false)
-  const [stats, setStats] = useState({
-    total: 0,
-    draft: 0,
-    completed: 0,
-    thisMonth: 0
-  })
+  const [stats, setStats] = useState(mockStats)
+  const [recentReports, setRecentReports] = useState(mockRecentReports)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Calculate stats from mock data
-    const now = new Date()
-    const thisMonth = reports.filter((report: Report) => {
-      const reportDate = new Date(report.created_at)
-      return reportDate.getMonth() === now.getMonth() && reportDate.getFullYear() === now.getFullYear()
-    })
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000)
+  }, [])
 
-    setStats({
-      total: reports.length,
-      draft: reports.filter((r: Report) => r.status === 'draft').length,
-      completed: reports.filter((r: Report) => r.status === 'completed').length,
-      thisMonth: thisMonth.length
-    })
-  }, [reports])
-
-  const handleCreateReport = () => {
-    router.push('/reports/create')
-  }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
-  }
-
-  const getStatusIcon = (status: keyof typeof statusIcons) => {
-    const Icon = statusIcons[status]
-    return <Icon className="h-4 w-4" />
-  }
-
-  if (isLoading) {
+  if (loading) {
     return (
-      <DashboardShell>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
-          </div>
+      <div className="space-y-6">
+        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+          ))}
         </div>
-      </DashboardShell>
+        <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+      </div>
     )
   }
 
   return (
-    <DashboardShell>
-      <div className="space-y-8">
-        {/* Welcome Section */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Manage your valuation reports and track your progress.
+    <div className="space-y-6">
+      {/* Welcome Section */}
+      <div className="md:flex md:items-center md:justify-between">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl font-bold leading-7 text-gray-900 dark:text-gray-100 sm:truncate sm:text-3xl sm:tracking-tight">
+            Dashboard
+          </h2>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Welcome back! Here&apos;s an overview of your valuation reports and activities.
           </p>
         </div>
-
-        {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Reports</CardTitle>
-              <DocumentTextIcon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.total}</div>
-              <p className="text-xs text-muted-foreground">All time</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Draft Reports</CardTitle>
-              <ClockIcon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.draft}</div>
-              <p className="text-xs text-muted-foreground">In progress</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Completed</CardTitle>
-              <CheckCircleIcon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.completed}</div>
-              <p className="text-xs text-muted-foreground">Finished reports</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">This Month</CardTitle>
-              <DocumentTextIcon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.thisMonth}</div>
-              <p className="text-xs text-muted-foreground">Created this month</p>
-            </CardContent>
-          </Card>
+        <div className="mt-4 flex md:ml-4 md:mt-0">
+          <Link href="/reports/create">
+            <Button className="flex items-center">
+              <span className="mr-2">➕</span>
+              New Report
+            </Button>
+          </Link>
         </div>
+      </div>
 
-        {/* Quick Actions */}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Reports</CardTitle>
+            <span className="text-lg text-gray-600 dark:text-gray-400">{icons.DocumentTextIcon}</span>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalReports}</div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              +12% from last month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">In Progress</CardTitle>
+            <span className="text-lg text-blue-600">{icons.ClockIcon}</span>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">{stats.inProgress}</div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              Currently being worked on
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Completed</CardTitle>
+            <span className="text-lg text-green-600">{icons.CheckCircleIcon}</span>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{stats.completed}</div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              Ready for delivery
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+            <span className="text-lg text-yellow-600">{icons.ExclamationTriangleIcon}</span>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              Awaiting your attention
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent Reports */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <span className="text-xl mr-2">{icons.ArrowTrendingUpIcon}</span>
+            Recent Reports
+          </CardTitle>
+          <CardDescription>
+            Your most recent valuation reports and their current status
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {recentReports.map((report) => {
+              const StatusIcon = getStatusIcon(report.status)
+              return (
+                <div
+                  key={report.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <div className="flex items-center space-x-4">
+                    <span className="text-2xl text-gray-400">{StatusIcon}</span>
+                    <div>
+                      <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                        {report.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {new Date(report.created_at).toLocaleDateString()} • {report.purpose}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge variant={getStatusColor(report.status) as any}>
+                      {report.status.replace('_', ' ')}
+                    </Badge>
+                    <Link href={`/reports/${report.id}`}>
+                      <Button variant="outline" size="sm">
+                        View
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="mt-6 text-center">
+            <Link href="/reports">
+              <Button variant="outline">View All Reports</Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>
-              Common tasks and shortcuts to get work done faster.
+              Common tasks to help you work more efficiently
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
-              <Button
-                onClick={handleCreateReport}
-                className="flex items-center justify-center space-x-2"
-                size="lg"
-              >
-                <PlusIcon className="h-4 w-4" />
-                <span>Create Report</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => router.push('/profile')}
-                size="lg"
-              >
-                Update Profile
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => router.push('/reports')}
-                size="lg"
-              >
-                View All Reports
-              </Button>
+            <div className="grid grid-cols-2 gap-4">
+              <Link href="/reports/create">
+                <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center">
+                  <span className="text-xl mb-2">➕</span>
+                  New Report
+                </Button>
+              </Link>
+              <Link href="/upload">
+                <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center">
+                  <span className="text-xl mb-2">📤</span>
+                  Upload Documents
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
 
-        {/* Recent Reports */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Recent Reports</CardTitle>
-                <CardDescription>Your latest valuation reports</CardDescription>
-              </div>
-              <Link
-                href="/reports"
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                View all
-              </Link>
-            </div>
+            <CardTitle>System Status</CardTitle>
+            <CardDescription>
+              Current status of processing services
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            {reports.length === 0 ? (
-              <div className="text-center py-8">
-                <DocumentTextIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No reports yet</h3>
-                <p className="text-muted-foreground mb-4">
-                  Get started by creating your first valuation report.
-                </p>
-                <Button onClick={handleCreateReport}>
-                  <PlusIcon className="h-4 w-4 mr-2" />
-                  Create Report
-                </Button>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">OCR Processing</span>
+                <Badge variant="success">Online</Badge>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {reports.slice(0, 5).map((report) => (
-                  <div
-                    key={report.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <DocumentTextIcon className="h-8 w-8 text-muted-foreground" />
-                      <div>
-                        <h4 className="font-medium">{report.title}</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Ref: {report.reference_number} • Created {formatDate(report.created_at)}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[report.status]}`}>
-                        <div className="flex items-center space-x-1">
-                          {getStatusIcon(report.status)}
-                          <span className="capitalize">{report.status.replace('_', ' ')}</span>
-                        </div>
-                      </span>
-                      <Link
-                        href={`/reports/${report.id}`}
-                        className="text-sm font-medium text-primary hover:underline"
-                      >
-                        View →
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+              <div className="flex items-center justify-between">
+                <span className="text-sm">AI Analysis</span>
+                <Badge variant="success">Online</Badge>
               </div>
-            )}
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Map Services</span>
+                <Badge variant="success">Online</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Report Generation</span>
+                <Badge variant="success">Online</Badge>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
-    </DashboardShell>
+    </div>
   )
 }

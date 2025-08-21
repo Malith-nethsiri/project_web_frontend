@@ -1,206 +1,219 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { ArrowLeftIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Card, CardHeader, CardContent } from '@/components/ui/Card'
-import { apiClient } from '@/lib/api/client'
+import { useReportWizardStore } from '@/stores/report-wizard'
+import { Stepper, StepperNavigation } from '@/components/ui/stepper'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { useUIStore } from '@/stores/ui'
+
+// Step Components
+import { ReportMetadataStep } from '@/components/reports/steps/report-metadata-step'
+import { ApplicantInformationStep } from '@/components/reports/steps/applicant-information-step'
+import { PropertyDetailsStep } from '@/components/reports/steps/property-details-step'
+import { ValuationDetailsStep } from '@/components/reports/steps/valuation-details-step'
+import { LegalAspectsStep } from '@/components/reports/steps/legal-aspects-step'
+import { PhotosStep } from '@/components/reports/steps/photos-step'
+import { ComparablesStep } from '@/components/reports/steps/comparables-step'
+import { ReviewConfirmationStep } from '@/components/reports/steps/review-confirmation-step'
+
+type StepStatus = 'current' | 'upcoming' | 'complete'
+
+const steps: { id: string; name: string; status: StepStatus }[] = [
+  { id: 'Step 1', name: 'Report Metadata', status: 'current' },
+  { id: 'Step 2', name: 'Applicant Information', status: 'upcoming' },
+  { id: 'Step 3', name: 'Property Details', status: 'upcoming' },
+  { id: 'Step 4', name: 'Valuation Details', status: 'upcoming' },
+  { id: 'Step 5', name: 'Legal Aspects', status: 'upcoming' },
+  { id: 'Step 6', name: 'Photos', status: 'upcoming' },
+  { id: 'Step 7', name: 'Comparables', status: 'upcoming' },
+  { id: 'Step 8', name: 'Review & Confirm', status: 'upcoming' },
+]
+
+const stepComponents = [
+  ReportMetadataStep,
+  ApplicantInformationStep,
+  PropertyDetailsStep,
+  ValuationDetailsStep,
+  LegalAspectsStep,
+  PhotosStep,
+  ComparablesStep,
+  ReviewConfirmationStep,
+]
 
 export default function CreateReportPage() {
   const router = useRouter()
-  const [formData, setFormData] = useState({
-    title: '',
-    purpose: 'mortgage' as 'mortgage' | 'sale' | 'insurance' | 'taxation' | 'legal' | 'other',
-    bank_name: '',
-    bank_branch: '',
-    bank_reference: '',
-    inspection_date: ''
-  })
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isLoading, setIsLoading] = useState(false)
+  const { addNotification } = useUIStore()
+  
+  const {
+    currentStep,
+    formData,
+    isSaving,
+    setCurrentStep,
+    validateStep,
+    resetForm,
+    setSaving,
+  } = useReportWizardStore()
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    
-    if (!formData.title) {
-      setErrors({ title: 'Report title is required' })
-      return
-    }
+  const [localSteps, setLocalSteps] = useState(steps)
 
-    setIsLoading(true)
-    setErrors({})
+  // Update step status based on current step
+  useEffect(() => {
+    const updatedSteps = steps.map((step, index) => ({
+      ...step,
+      status: index < currentStep ? 'complete' as const
+        : index === currentStep ? 'current' as const
+        : 'upcoming' as const
+    }))
+    setLocalSteps(updatedSteps)
+  }, [currentStep])
 
-    try {
-      const response = await apiClient.createReport({
-        ...formData,
-        inspection_date: formData.inspection_date ? new Date(formData.inspection_date).toISOString() : null
+  const handleNext = () => {
+    if (validateStep(currentStep)) {
+      if (currentStep < steps.length - 1) {
+        setCurrentStep(currentStep + 1)
+      } else {
+        handleSubmit()
+      }
+    } else {
+      addNotification({
+        type: 'error',
+        message: 'Please complete all required fields before proceeding.',
       })
+    }
+  }
 
-      const reportId = response.data.id
-      router.push(`/reports/${reportId}/edit`)
-    } catch (error: any) {
-      setErrors({
-        general: error.response?.data?.detail || 'Failed to create report. Please try again.'
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  const handleStepClick = (step: number) => {
+    // Allow going back to previous steps, but validate current step before going forward
+    if (step <= currentStep || validateStep(currentStep)) {
+      setCurrentStep(step)
+    }
+  }
+
+  const handleSaveDraft = async () => {
+    setSaving(true)
+    try {
+      // Simulate API call to save draft
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      addNotification({
+        type: 'success',
+        message: 'Draft saved successfully!',
+      })
+    } catch (error) {
+      addNotification({
+        type: 'error',
+        message: 'Failed to save draft. Please try again.',
       })
     } finally {
-      setIsLoading(false)
+      setSaving(false)
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }))
+  const handleSubmit = async () => {
+    setSaving(true)
+    try {
+      // Simulate API call to create report
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      const reportId = `report_${Date.now()}`
+      
+      addNotification({
+        type: 'success',
+        message: 'Report created successfully!',
+      })
+
+      // Redirect to report view page
+      router.push(`/reports/${reportId}`)
+      resetForm()
+    } catch (error) {
+      addNotification({
+        type: 'error',
+        message: 'Failed to create report. Please try again.',
+      })
+    } finally {
+      setSaving(false)
     }
   }
+
+  const CurrentStepComponent = stepComponents[currentStep]
+  const isLastStep = currentStep === steps.length - 1
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16">
-            <Link
-              href="/dashboard"
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
-            >
-              <ArrowLeftIcon className="h-5 w-5" />
-              <span>Back to Dashboard</span>
-            </Link>
-            <div className="ml-6">
-              <h1 className="text-xl font-semibold text-gray-900">Create New Report</h1>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center space-x-3">
-              <DocumentTextIcon className="h-8 w-8 text-blue-600" />
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900">Report Details</h2>
-                <p className="text-gray-600">Provide basic information about the valuation report.</p>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {errors.general && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                  {errors.general}
-                </div>
-              )}
-
-              <Input
-                label="Report Title *"
-                value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
-                error={!!errors.title}
-                helperText={errors.title}
-                placeholder="e.g., Property Valuation - 123 Main Street"
-                required
-              />
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Purpose of Valuation *
-                </label>
-                <select
-                  value={formData.purpose}
-                  onChange={(e) => handleInputChange('purpose', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  required
-                >
-                  <option value="mortgage">Mortgage</option>
-                  <option value="sale">Sale</option>
-                  <option value="insurance">Insurance</option>
-                  <option value="taxation">Taxation</option>
-                  <option value="legal">Legal</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Input
-                  label="Bank Name"
-                  value={formData.bank_name}
-                  onChange={(e) => handleInputChange('bank_name', e.target.value)}
-                  placeholder="e.g., Commercial Bank"
-                />
-
-                <Input
-                  label="Bank Branch"
-                  value={formData.bank_branch}
-                  onChange={(e) => handleInputChange('bank_branch', e.target.value)}
-                  placeholder="e.g., Colombo Branch"
-                />
-              </div>
-
-              <Input
-                label="Bank Reference"
-                value={formData.bank_reference}
-                onChange={(e) => handleInputChange('bank_reference', e.target.value)}
-                placeholder="e.g., REF/2024/001"
-              />
-
-              <Input
-                type="date"
-                label="Inspection Date"
-                value={formData.inspection_date}
-                onChange={(e) => handleInputChange('inspection_date', e.target.value)}
-                helperText="Optional - can be updated later"
-              />
-
-              <div className="flex justify-end space-x-4 pt-6">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.push('/dashboard')}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  loading={isLoading}
-                  disabled={!formData.title}
-                >
-                  Create Report
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Next Steps Info */}
-        <Card className="mt-6">
-          <CardContent>
-            <h3 className="text-lg font-medium text-gray-900 mb-3">What happens next?</h3>
-            <div className="space-y-2 text-gray-600">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                <span>You&apos;ll be taken to the report editor</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                <span>Upload and process documents with OCR</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                <span>Add property details, photos, and valuations</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                <span>Generate professional DOCX and PDF reports</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          Create New Valuation Report
+        </h1>
+        <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">
+          Complete all sections to generate a comprehensive property valuation report
+        </p>
       </div>
+
+      {/* Progress Stepper */}
+      <Card>
+        <CardContent className="p-6">
+          <Stepper 
+            steps={localSteps} 
+            currentStep={currentStep}
+            onStepClick={handleStepClick}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Current Step Content */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <span className="text-primary-600 dark:text-primary-400 mr-2">
+              {localSteps[currentStep].id}
+            </span>
+            {localSteps[currentStep].name}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <CurrentStepComponent />
+          
+          {/* Navigation */}
+          <StepperNavigation
+            currentStep={currentStep}
+            totalSteps={steps.length}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            onSave={handleSaveDraft}
+            isNextDisabled={isSaving}
+            isLastStep={isLastStep}
+            isSaving={isSaving}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Progress Summary */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+            <span>
+              Step {currentStep + 1} of {steps.length}
+            </span>
+            <span>
+              {Math.round(((currentStep + 1) / steps.length) * 100)}% Complete
+            </span>
+          </div>
+          <div className="mt-2 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div
+              className="bg-primary-600 h-2 rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
