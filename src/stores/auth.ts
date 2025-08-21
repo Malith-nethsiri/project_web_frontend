@@ -15,8 +15,12 @@ interface AuthState {
 
 // Mock API functions for now
 const mockLogin = async (email: string, password: string) => {
+  console.log('🔐 Mock Login Attempt:', { email, password: '***' })
+  
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 1000))
+  
+  console.log('🔍 Checking credentials...')
   
   if (email === 'demo@valuerpro.com' && password === 'password') {
     const user: User = {
@@ -29,12 +33,16 @@ const mockLogin = async (email: string, password: string) => {
     }
     localStorage.setItem('access_token', 'mock-jwt-token')
     localStorage.setItem('user', JSON.stringify(user))
+    console.log('✅ Login successful:', user)
     return { access_token: 'mock-jwt-token', token_type: 'bearer', user }
   }
+  console.log('❌ Login failed: Invalid credentials')
   throw new Error('Invalid credentials')
 }
 
 const mockRegister = async (email: string, password: string, fullName?: string) => {
+  console.log('📝 Mock Register Attempt:', { email, fullName, password: '***' })
+  
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 1000))
   
@@ -46,6 +54,7 @@ const mockRegister = async (email: string, password: string, fullName?: string) 
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   }
+  console.log('✅ Registration successful:', user)
   return user
 }
 
@@ -66,15 +75,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   error: null,
 
   login: async (email: string, password: string) => {
+    console.log('🚀 Starting login process...')
     set({ isLoading: true, error: null })
     try {
       const response = await mockLogin(email, password)
+      console.log('🎉 Login successful, updating store state')
       set({ 
         user: response.user, 
         isAuthenticated: true, 
         isLoading: false 
       })
     } catch (error: any) {
+      console.error('💥 Login error:', error)
       set({ 
         error: error.message || 'Login failed',
         isLoading: false 
@@ -84,11 +96,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   register: async (email: string, password: string, fullName?: string) => {
+    console.log('📝 Starting registration process...')
     set({ isLoading: true, error: null })
     try {
       const user = await mockRegister(email, password, fullName)
+      console.log('🎉 Registration successful')
       set({ isLoading: false })
     } catch (error: any) {
+      console.error('💥 Registration error:', error)
       set({ 
         error: error.message || 'Registration failed',
         isLoading: false 
