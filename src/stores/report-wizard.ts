@@ -329,7 +329,9 @@ export const useReportWizardStore = create<ReportWizardState>((set, get) => ({
     set((state) => ({
       formData: {
         ...state.formData,
-        [section]: typeof data === 'object' && data !== null ? { ...state.formData[section], ...data } : data,
+        [section]: typeof data === 'object' && data !== null && !Array.isArray(data)
+          ? { ...state.formData[section] as object, ...data }
+          : data,
       },
     }))
   },

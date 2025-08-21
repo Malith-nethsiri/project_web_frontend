@@ -8,18 +8,18 @@ import { Select } from '@/components/ui/select'
 import { useReportWizardStore } from '@/stores/report-wizard'
 
 const photoCategories = [
-  { value: 'exterior_front', label: 'Exterior - Front View' },
-  { value: 'exterior_back', label: 'Exterior - Back View' },
-  { value: 'exterior_sides', label: 'Exterior - Side Views' },
-  { value: 'interior_living', label: 'Interior - Living Areas' },
-  { value: 'interior_bedrooms', label: 'Interior - Bedrooms' },
-  { value: 'interior_kitchen', label: 'Interior - Kitchen' },
-  { value: 'interior_bathrooms', label: 'Interior - Bathrooms' },
-  { value: 'features_special', label: 'Special Features' },
-  { value: 'condition_damage', label: 'Condition/Damage' },
-  { value: 'surroundings', label: 'Surroundings/Neighborhood' },
-  { value: 'documents', label: 'Document Photos' },
-  { value: 'other', label: 'Other' },
+  { value: 'exterior', label: 'Exterior Views', subType: 'front' },
+  { value: 'exterior', label: 'Exterior - Back View', subType: 'back' },
+  { value: 'exterior', label: 'Exterior - Side Views', subType: 'sides' },
+  { value: 'interior', label: 'Interior - Living Areas', subType: 'living' },
+  { value: 'interior', label: 'Interior - Bedrooms', subType: 'bedrooms' },
+  { value: 'interior', label: 'Interior - Kitchen', subType: 'kitchen' },
+  { value: 'interior', label: 'Interior - Bathrooms', subType: 'bathrooms' },
+  { value: 'other', label: 'Special Features', subType: 'features' },
+  { value: 'other', label: 'Condition/Damage', subType: 'condition' },
+  { value: 'other', label: 'Surroundings/Neighborhood', subType: 'surroundings' },
+  { value: 'document', label: 'Document Photos', subType: 'documents' },
+  { value: 'other', label: 'Other', subType: 'other' },
 ]
 
 const qualityLevels = [
@@ -34,27 +34,20 @@ export function PhotosMediaStep() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [dragOver, setDragOver] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState('exterior_front')
+  const [selectedCategory, setSelectedCategory] = useState('exterior')
 
   const handleFileSelect = (files: FileList | null) => {
     if (!files) return
     
     setUploading(true)
     const newPhotos = Array.from(files).map((file, index) => {
-      const url = URL.createObjectURL(file)
       return {
-        id: `${Date.now()}_${index}`,
-        file,
-        url,
-        category: selectedCategory,
+        file_url: URL.createObjectURL(file),
+        filename: file.name,
         caption: '',
-        quality: 'good' as const,
-        ai_analysis: {
-          detected_features: [],
-          condition_score: 85,
-          suggestions: [],
-        },
-        uploaded: false,
+        description: '',
+        type: selectedCategory as 'exterior' | 'interior' | 'document' | 'other',
+        sequence_order: (formData.photos?.length || 0) + index,
       }
     })
 
@@ -85,23 +78,24 @@ export function PhotosMediaStep() {
     setDragOver(false)
   }
 
-  const handlePhotoUpdate = (photoId: string, updates: any) => {
+  const handlePhotoUpdate = (filename: string, updates: any) => {
     const updatedPhotos = (formData.photos || []).map(photo =>
-      photo.filename === photoId ? { ...photo, ...updates } : photo
+      photo.filename === filename ? { ...photo, ...updates } : photo
     )
     
     updateFormData('photos', updatedPhotos)
   }
 
-  const handleRemovePhoto = (photoId: string) => {
-    const updatedPhotos = (formData.photos || []).filter(photo => photo.filename !== photoId)
+  const handleRemovePhoto = (filename: string) => {
+    const updatedPhotos = (formData.photos || []).filter(photo => photo.filename !== filename)
     updateFormData('photos', updatedPhotos)
   }
 
   const getPhotosCountByCategory = () => {
     const photos = formData.photos || []
     return photoCategories.reduce((acc, category) => {
-      acc[category.value] = photos.filter(p => p.category === category.value).length
+      const key = `${category.value}_${category.subType}`
+      acc[key] = photos.filter(p => p.type === category.value).length
       return acc
     }, {} as Record<string, number>)
   }
@@ -129,11 +123,14 @@ export function PhotosMediaStep() {
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
-              {photoCategories.map((category) => (
-                <option key={category.value} value={category.value}>
-                  {category.label} {photoCounts[category.value] > 0 && `(${photoCounts[category.value]})`}
-                </option>
-              ))}
+              {photoCategories.map((category) => {
+                const key = `${category.value}_${category.subType}`
+                return (
+                  <option key={key} value={category.value}>
+                    {category.label} {photoCounts[key] > 0 && `(${photoCounts[key]})`}
+                  </option>
+                )
+              })}
             </Select>
           </div>
 
@@ -209,15 +206,14 @@ export function PhotosMediaStep() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {formData.photos?.map((photo) => {
-                const category = photoCategories.find(c => c.value === photo.category)
-                const quality = qualityLevels.find(q => q.value === photo.quality)
+                const category = photoCategories.find(c => c.value === photo.type)
                 
                 return (
                   <div key={photo.filename} className="group relative border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                     <div className="aspect-square bg-gray-100 dark:bg-gray-800">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={photo.url}
+                        src={photo.file_url}
                         alt={photo.caption || 'Property photo'}
                         className="w-full h-full object-cover"
                       />
@@ -246,19 +242,10 @@ export function PhotosMediaStep() {
                         {category?.label}
                       </div>
                       
-                      {/* Quality indicator */}
+                      {/* Type indicator */}
                       <div className="flex items-center justify-between">
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          quality?.color === 'green' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                          quality?.color === 'blue' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
-                          quality?.color === 'yellow' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                          'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                        }`}>
-                          {quality?.label}
-                        </span>
-                        
-                        <span className="text-xs text-gray-500 dark:text-gray-500">
-                          {photo.ai_analysis?.condition_score}%
+                        <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                          {photo.type}
                         </span>
                       </div>
                       
@@ -266,7 +253,7 @@ export function PhotosMediaStep() {
                       <Input
                         type="text"
                         placeholder="Add caption..."
-                        value={photo.caption}
+                        value={photo.caption || ''}
                         onChange={(e) => handlePhotoUpdate(photo.filename, { caption: e.target.value })}
                         className="mt-2 text-xs"
                       />
@@ -290,12 +277,13 @@ export function PhotosMediaStep() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {photoCategories.map((category) => {
-              const count = photoCounts[category.value]
+              const key = `${category.value}_${category.subType}`
+              const count = photoCounts[key]
               const isComplete = count > 0
               
               return (
                 <div
-                  key={category.value}
+                  key={key}
                   className={`flex items-center justify-between p-3 rounded-lg border ${
                     isComplete
                       ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20'

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthStore } from '@/stores/auth'
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -35,22 +35,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 px-4">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-      
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400">
-            ValuerPro
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Professional Property Valuation Platform
-          </p>
-        </div>
-
-        <Card>
+    <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center">Sign In</CardTitle>
             <CardDescription className="text-center">
@@ -142,6 +127,37 @@ export default function LoginPage() {
             </CardFooter>
           </form>
         </Card>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 px-4">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400">
+            ValuerPro
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            Professional Property Valuation Platform
+          </p>
+        </div>
+
+        <Suspense fallback={
+          <Card>
+            <CardContent className="p-8">
+              <div className="flex items-center justify-center">
+                <div className="text-sm text-gray-500">Loading...</div>
+              </div>
+            </CardContent>
+          </Card>
+        }>
+          <LoginForm />
+        </Suspense>
 
         <div className="mt-8 text-center text-xs text-gray-500 dark:text-gray-400">
           © 2025 ValuerPro. All rights reserved.

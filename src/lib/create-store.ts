@@ -32,7 +32,9 @@ export function create<T>(stateCreator: StateCreator<T>) {
 
   const subscribe = (listener: (state: T) => void) => {
     listeners.add(listener)
-    return () => listeners.delete(listener)
+    return () => {
+      listeners.delete(listener)
+    }
   }
 
   const api: StoreApi<T> = { setState, getState, subscribe }

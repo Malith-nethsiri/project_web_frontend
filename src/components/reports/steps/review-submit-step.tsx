@@ -55,12 +55,12 @@ const sectionValidation = [
 ]
 
 export function ReviewSubmitStep() {
-  const { data, submitReport } = useReportWizardStore()
+  const { formData } = useReportWizardStore()
   const [generating, setGenerating] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
   const validateSection = (section: typeof sectionValidation[0]) => {
-    const sectionData = data[section.key as keyof typeof data]
+    const sectionData = formData[section.key as keyof typeof formData]
     if (!sectionData && section.optional) return { valid: true, missing: [] }
     
     const missing = section.required.filter(field => {
@@ -108,7 +108,8 @@ export function ReviewSubmitStep() {
     
     setSubmitting(true)
     try {
-      await submitReport()
+      // TODO: Implement actual submitReport API call
+      console.log('Submitting report:', formData)
       // Redirect would happen here
       alert('Report submitted successfully! You will be redirected to the reports dashboard.')
     } catch (error) {
@@ -121,10 +122,10 @@ export function ReviewSubmitStep() {
 
   const getDataSummary = () => {
     const summary = {
-      photos: data.photos_media?.photos?.length || 0,
-      documents: data.legal_aspects?.documents?.length || 0,
-      comparables: data.comparables?.properties?.length || 0,
-      finalValue: data.valuation_details?.final_value || 0,
+      photos: formData.photos?.length || 0,
+      documents: formData.legal_aspects?.length || 0,
+      comparables: formData.comparables?.length || 0,
+      finalValue: formData.valuation?.total_market_value || 0,
     }
     return summary
   }
@@ -260,24 +261,24 @@ export function ReviewSubmitStep() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Title:</span>
-                  <span className="font-medium">{data.metadata?.title || 'Not specified'}</span>
+                  <span className="font-medium">{formData.title || 'Not specified'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Purpose:</span>
-                  <span className="font-medium">{data.metadata?.purpose || 'Not specified'}</span>
+                  <span className="font-medium">{formData.purpose || 'Not specified'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Valuation Date:</span>
                   <span className="font-medium">
-                    {data.metadata?.valuation_date 
-                      ? new Date(data.metadata.valuation_date).toLocaleDateString() 
+                    {formData.valuation_date 
+                      ? new Date(formData.valuation_date).toLocaleDateString() 
                       : 'Not specified'
                     }
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Bank/Institution:</span>
-                  <span className="font-medium">{data.metadata?.bank_institution || 'Not specified'}</span>
+                  <span className="font-medium">{formData.bank_name || 'Not specified'}</span>
                 </div>
               </div>
             </div>
@@ -287,21 +288,21 @@ export function ReviewSubmitStep() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Applicant:</span>
-                  <span className="font-medium">{data.applicant_info?.name || 'Not specified'}</span>
+                  <span className="font-medium">{formData.applicant?.name || 'Not specified'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Property Type:</span>
-                  <span className="font-medium">{data.property_details?.property_type || 'Not specified'}</span>
+                  <span className="font-medium">{formData.property?.property_type || 'Not specified'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Methodology:</span>
-                  <span className="font-medium">{data.valuation_details?.methodology || 'Not specified'}</span>
+                  <span className="font-medium">{formData.valuation?.primary_method || 'Not specified'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Final Value:</span>
                   <span className="font-bold text-green-600 dark:text-green-400">
-                    {data.valuation_details?.final_value 
-                      ? `LKR ${data.valuation_details.final_value.toLocaleString()}`
+                    {formData.valuation?.total_market_value 
+                      ? `LKR ${formData.valuation.total_market_value.toLocaleString()}`
                       : 'Not specified'
                     }
                   </span>
