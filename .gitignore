@@ -102,3 +102,23 @@ jspm_packages/
 
 # TernJS port file
 .tern-port
+
+# Credential files
+cred.md
+credentials.json
+service-account*.json
+*.key
+*.pem
+
+# Backend Python files
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+backend/.env.local
+backend/.env.production
+backend/.env.development
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
