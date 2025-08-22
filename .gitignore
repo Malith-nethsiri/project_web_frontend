@@ -122,3 +122,6 @@ backend/.env.development
 *.db
 *.sqlite
 *.sqlite3
+
+# Temporary deployment directories
+temp_backend_deploy/
