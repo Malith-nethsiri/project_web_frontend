@@ -122,7 +122,7 @@ export default function DebugPage() {
                   Clear LocalStorage
                 </Button>
                 {isAuthenticated && (
-                  <Button onClick={logout} variant="outline" size="sm">
+                  <Button onClick={() => logout()} variant="outline" size="sm">
                     Logout
                   </Button>
                 )}
@@ -168,11 +168,10 @@ export default function DebugPage() {
 
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-3">
                 <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-1">
-                  Valid Test Credentials:
+                  API Integration:
                 </h4>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  Email: demo@valuerpro.com<br/>
-                  Password: password
+                  Using real backend API endpoints at /auth/login
                 </p>
               </div>
             </CardContent>
@@ -229,7 +228,7 @@ export default function DebugPage() {
                   Note:
                 </h4>
                 <p className="text-sm text-green-700 dark:text-green-300">
-                  Registration is using mock data. Any email/password combination will work.
+                  Registration uses real backend API at /auth/register
                 </p>
               </div>
             </CardContent>
@@ -253,10 +252,10 @@ export default function DebugPage() {
               <div>
                 <label className="text-sm font-medium">Current Mode</label>
                 <div className="mt-1">
-                  <Badge variant="warning">MOCK MODE</Badge>
+                  <Badge variant="success">API MODE</Badge>
                 </div>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  Authentication is using mock functions, not real API calls.
+                  Authentication is using real backend API calls.
                 </p>
               </div>
 
@@ -287,7 +286,7 @@ export default function DebugPage() {
               <div>
                 <h4 className="font-medium mb-3">✅ Working Features:</h4>
                 <ul className="space-y-1 text-sm">
-                  <li>✅ Mock authentication system</li>
+                  <li>✅ Real API authentication system</li>
                   <li>✅ Error handling and display</li>
                   <li>✅ Loading states</li>
                   <li>✅ LocalStorage persistence</li>
@@ -298,9 +297,9 @@ export default function DebugPage() {
               <div>
                 <h4 className="font-medium mb-3">🔧 Test Scenarios:</h4>
                 <ul className="space-y-1 text-sm">
-                  <li>🔧 Valid login (demo@valuerpro.com / password)</li>
+                  <li>🔧 Valid login (with real backend credentials)</li>
                   <li>🔧 Invalid login (wrong credentials)</li>
-                  <li>🔧 Registration with any email</li>
+                  <li>🔧 Registration with backend validation</li>
                   <li>🔧 Error state handling</li>
                   <li>🔧 Logout functionality</li>
                   <li>🔧 Route protection (try /dashboard)</li>

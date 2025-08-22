@@ -1,5 +1,6 @@
 import { create } from '@/lib/create-store'
 import { User } from '@/types'
+import { apiClient } from '@/lib/api'
 
 interface AuthState {
   user: User | null
@@ -8,64 +9,9 @@ interface AuthState {
   error: string | null
   login: (email: string, password: string) => Promise<void>
   register: (email: string, password: string, fullName?: string) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
   getCurrentUser: () => Promise<void>
   clearError: () => void
-}
-
-// Mock API functions for now
-const mockLogin = async (email: string, password: string) => {
-  console.log('🔐 Mock Login Attempt:', { email, password: '***' })
-  
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  
-  console.log('🔍 Checking credentials...')
-  
-  if (email === 'demo@valuerpro.com' && password === 'password') {
-    const user: User = {
-      id: '1',
-      email: email,
-      full_name: 'Demo User',
-      is_active: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    }
-    localStorage.setItem('access_token', 'mock-jwt-token')
-    localStorage.setItem('user', JSON.stringify(user))
-    console.log('✅ Login successful:', user)
-    return { access_token: 'mock-jwt-token', token_type: 'bearer', user }
-  }
-  console.log('❌ Login failed: Invalid credentials')
-  throw new Error('Invalid credentials')
-}
-
-const mockRegister = async (email: string, password: string, fullName?: string) => {
-  console.log('📝 Mock Register Attempt:', { email, fullName, password: '***' })
-  
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  
-  const user: User = {
-    id: Math.random().toString(36).substr(2, 9),
-    email: email,
-    full_name: fullName || 'New User',
-    is_active: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  }
-  console.log('✅ Registration successful:', user)
-  return user
-}
-
-const mockGetCurrentUser = async (): Promise<User> => {
-  const token = localStorage.getItem('access_token')
-  const userData = localStorage.getItem('user')
-  
-  if (token && userData) {
-    return JSON.parse(userData)
-  }
-  throw new Error('Not authenticated')
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -75,67 +21,69 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   error: null,
 
   login: async (email: string, password: string) => {
-    console.log('🚀 Starting login process...')
     set({ isLoading: true, error: null })
     try {
-      const response = await mockLogin(email, password)
-      console.log('🎉 Login successful, updating store state')
-      set({ 
-        user: response.user, 
-        isAuthenticated: true, 
-        isLoading: false 
+      // Call backend /auth/login; token is stored inside ApiClient
+      await apiClient.login({ email, password })
+      // Fetch current user to populate the store
+      const user = await apiClient.getCurrentUser()
+      set({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
       })
-    } catch (error: any) {
-      console.error('💥 Login error:', error)
-      set({ 
-        error: error.message || 'Login failed',
-        isLoading: false 
+    } catch (err: any) {
+      set({
+        error: err.response?.data?.detail || err.message || 'Login failed',
+        isLoading: false,
       })
-      throw error
+      throw err
     }
   },
 
   register: async (email: string, password: string, fullName?: string) => {
-    console.log('📝 Starting registration process...')
     set({ isLoading: true, error: null })
     try {
-      const user = await mockRegister(email, password, fullName)
-      console.log('🎉 Registration successful')
+      // Pass full name to backend; adjust backend if necessary
+      await apiClient.register({ email, password, full_name: fullName })
       set({ isLoading: false })
-    } catch (error: any) {
-      console.error('💥 Registration error:', error)
-      set({ 
-        error: error.message || 'Registration failed',
-        isLoading: false 
+    } catch (err: any) {
+      set({
+        error: err.response?.data?.detail || err.message || 'Registration failed',
+        isLoading: false,
       })
-      throw error
+      throw err
     }
   },
 
-  logout: () => {
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('user')
-    set({ 
-      user: null, 
-      isAuthenticated: false, 
-      error: null 
-    })
+  logout: async () => {
+    set({ isLoading: true })
+    try {
+      await apiClient.logout()
+    } finally {
+      set({
+        user: null,
+        isAuthenticated: false,
+        error: null,
+        isLoading: false,
+      })
+    }
   },
 
   getCurrentUser: async () => {
     set({ isLoading: true })
     try {
-      const user = await mockGetCurrentUser()
-      set({ 
-        user, 
-        isAuthenticated: true, 
-        isLoading: false 
+      const user = await apiClient.getCurrentUser()
+      set({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
       })
-    } catch (error) {
-      set({ 
-        user: null, 
-        isAuthenticated: false, 
-        isLoading: false 
+    } catch {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
       })
     }
   },

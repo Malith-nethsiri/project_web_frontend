@@ -87,7 +87,7 @@ class ApiClient {
     formData.append('password', credentials.password)
     
     const response: AxiosResponse<AuthResponse> = await this.client.post(
-      '/api/v1/auth/login',
+      '/auth/login',
       formData,
       {
         headers: {
@@ -104,17 +104,23 @@ class ApiClient {
   }
 
   async register(userData: RegisterRequest): Promise<User> {
-    const response: AxiosResponse<User> = await this.client.post('/api/v1/auth/register', userData)
+    const response: AxiosResponse<User> = await this.client.post('/auth/register', userData)
     return response.data
   }
 
   async getCurrentUser(): Promise<User> {
-    const response: AxiosResponse<User> = await this.client.get('/api/v1/auth/me')
+    const response: AxiosResponse<User> = await this.client.get('/auth/me')
     return response.data
   }
 
-  logout(): void {
-    this.clearToken()
+  async logout(): Promise<void> {
+    try {
+      await this.client.post('/auth/logout')
+    } catch (error) {
+      // Ignore logout errors and clear token anyway
+    } finally {
+      this.clearToken()
+    }
   }
 
   // Reports

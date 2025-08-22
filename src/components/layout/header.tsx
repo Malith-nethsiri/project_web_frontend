@@ -20,8 +20,8 @@ export function Header({ onSidebarOpen }: HeaderProps) {
   const { user, logout } = useAuthStore()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     window.location.href = '/auth/login'
   }
 
