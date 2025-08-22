@@ -47,7 +47,7 @@ app.include_router(api_router, prefix="/api/v1")
 
 @app.get("/")
 async def root():
-    return {"message": "ValuerPro API is running", "version": "1.0.0"}
+    return {"message": "ValuerPro API is running", "version": "1.0.1", "status": "deployed"}
 
 @app.get("/health")
 async def health_check():
