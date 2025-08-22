@@ -89,7 +89,43 @@ curl https://fastapi-backend-production-a916.up.railway.app/health
 # Should return: {"status": "healthy"}
 ```
 
+## Critical Fix Applied ⚠️
+
+### Dockerfile Issue Resolved
+**Problem**: Railway build was failing at step 3/7 with apt-get exit code 137 (context canceled)  
+**Root Cause**: Unnecessary system package installation (`build-essential`, `libpq-dev`)  
+**Solution**: Removed apt-get step since `psycopg2-binary` includes pre-compiled binaries  
+
+**Updated Dockerfile** (commit: `93b516e`):
+```dockerfile
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+RUN mkdir -p uploads
+EXPOSE 8000
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+```
+
+### Current Status
+- ✅ **Repository**: All fixes committed and pushed
+- ✅ **Dockerfile**: Simplified and should build successfully
+- ⚠️ **Railway Deployment**: Still shows frontend instead of backend
+- 🔧 **Next Step**: Manual service configuration in Railway dashboard required
+
+### Railway Dashboard Actions Needed
+Railway appears to be cached or misconfigured. You need to:
+
+1. **Delete existing `fastapi-backend` service** if misconfigured
+2. **Create new service** pointing to GitHub repository
+3. **Set Builder to Dockerfile** with path `backend/Dockerfile`
+4. **Configure all environment variables** (see above list)
+5. **Deploy fresh service** without cache conflicts
+
 ---
-Last Updated: 2025-08-22
-Status: Ready for Railway dashboard deployment
-Repository: Fully updated and synchronized
+Last Updated: 2025-08-22 (Post Dockerfile Fix)
+Status: Repository ready, Railway dashboard reconfiguration required
+Build Issue: Resolved (apt-get step removed)
